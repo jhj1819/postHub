@@ -3,6 +3,8 @@ package study.posthub.domain.member.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import study.posthub.domain.member.entity.Authority;
+import study.posthub.domain.member.entity.Member;
 
 import static org.assertj.core.api.Assertions.*;
 
