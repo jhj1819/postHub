@@ -10,12 +10,12 @@ import java.util.Map;
 public class CustomOAuth2Member implements OAuth2User {
 
     private final OAuth2Response oAuth2Response;
-    private final String role;
+    private final String authority;
 
-    public CustomOAuth2Member(OAuth2Response oAuth2Response, String role) {
+    public CustomOAuth2Member(OAuth2Response oAuth2Response, String authority) {
 
         this.oAuth2Response = oAuth2Response;
-        this.role = role;
+        this.authority = authority;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CustomOAuth2Member implements OAuth2User {
             @Override
             public String getAuthority() {
 
-                return role;
+                return authority;
             }
         });
 
@@ -47,8 +47,13 @@ public class CustomOAuth2Member implements OAuth2User {
         return oAuth2Response.getName();
     }
 
-    public String getUsername() {
+    public String getUsername() { //id값을 강제로 특정하게 만들어준것,
 
         return oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
+    }
+
+    public String getEmail(){
+
+        return oAuth2Response.getEmail();
     }
 }
