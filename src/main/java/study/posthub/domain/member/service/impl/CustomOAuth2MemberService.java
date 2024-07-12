@@ -10,10 +10,20 @@ import study.posthub.domain.member.dto.CustomOAuth2Member;
 import study.posthub.domain.member.dto.NaverResponse;
 import study.posthub.domain.member.dto.OAuth2Response;
 import study.posthub.domain.member.entity.Authority;
+import study.posthub.domain.member.entity.Member;
+import study.posthub.domain.member.repository.MemberRepository;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
+
+    private final MemberRepository memberRepository;
+
+    private CustomOAuth2MemberService(MemberRepository memberRepository){
+        this.memberRepository = memberRepository;
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -32,7 +42,30 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
             return null;
         }
 
-        String authority = Authority.ADMIN.name();
+        String authority = null;
+
+        String email = oAuth2Response.getEmail();
+
+        //해당 emil 유저가 존재하는지 확인
+        Optional<Member> existData = memberRepository.findByEmail(email);
+        if (existData.get() == null){
+            //생성
+            Member member = new Member();
+            member.setEmail(oAuth2Response.getEmail());
+            member.setNickname(oAuth2Response.getName());
+            member.setAuthority(Authority.ADMIN);
+
+            memberRepository.save(member);
+
+        }else{
+            //업데이트
+            authority = existData.get().getAuthority().name();
+            existData.get().setEmail(oAuth2Response.getEmail());
+            existData.get().setNickname(oAuth2Response.getName());
+            memberRepository.save(existData.get());
+        }
+
+
 
         return new CustomOAuth2Member(oAuth2Response, authority);
     }
