@@ -1,4 +1,4 @@
-package study.posthub.domain.member.service;
+package study.posthub.domain.member.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
