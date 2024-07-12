@@ -48,7 +48,7 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
 
         //해당 emil 유저가 존재하는지 확인
         Optional<Member> existData = memberRepository.findByEmail(email);
-        if (existData.get() == null){
+        if (existData.isEmpty()){
             //생성
             Member member = new Member();
             member.setEmail(oAuth2Response.getEmail());
