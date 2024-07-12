@@ -31,42 +31,40 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("memberInfo = {}", oAuth2User.getAttributes());
 
+        OAuth2Response oAuth2Response = getOAuth2Response(userRequest, oAuth2User);
+        if (oAuth2Response == null) {
+            throw new OAuth2AuthenticationException("Unsupported provider: " + userRequest.getClientRegistration().getRegistrationId());
+        }
+
+        Member member = saveOrUpdateMember(oAuth2Response);
+        return new CustomOAuth2Member(oAuth2Response, member.getAuthority().name());
+    }
+
+    private OAuth2Response getOAuth2Response(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
+
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        OAuth2Response oAuth2Response = null;
-        if (registrationId.equals("naver")) {
-
-            oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
+        if ("naver".equals(registrationId)) {
+            return new NaverResponse(oAuth2User.getAttributes());
         }
-        else {
+        return null;
+    }
 
-            return null;
-        }
-
-        String authority = null;
-
+    private Member saveOrUpdateMember(OAuth2Response oAuth2Response) {
         String email = oAuth2Response.getEmail();
-
-        //해당 emil 유저가 존재하는지 확인
-        Optional<Member> existData = memberRepository.findByEmail(email);
-        if (existData.isEmpty()){
-            //생성
-            Member member = new Member();
-            member.setEmail(oAuth2Response.getEmail());
+        Optional<Member> existingMemberOptional = memberRepository.findByEmail(email);
+        Member member;
+        if (existingMemberOptional.isEmpty()) {
+            member = new Member();
+            member.setEmail(email);
             member.setNickname(oAuth2Response.getName());
             member.setAuthority(Authority.ADMIN);
-
             memberRepository.save(member);
-
-        }else{
-            //업데이트
-            authority = existData.get().getAuthority().name();
-            existData.get().setEmail(oAuth2Response.getEmail());
-            existData.get().setNickname(oAuth2Response.getName());
-            memberRepository.save(existData.get());
+        } else {
+            member = existingMemberOptional.get();
+            member.setEmail(email);
+            member.setNickname(oAuth2Response.getName());
+            memberRepository.save(member);
         }
-
-
-
-        return new CustomOAuth2Member(oAuth2Response, authority);
+        return member;
     }
 }
