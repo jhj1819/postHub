@@ -1,12 +1,21 @@
 package study.posthub.domain.member.service.impl;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.posthub.domain.member.dto.MemberRequest;
 import study.posthub.domain.member.entity.Member;
 import study.posthub.domain.member.repository.MemberRepository;
 import study.posthub.domain.member.service.MemberService;
+
+import java.io.IOException;
+import java.util.Collection;
 
 @Service
 @Transactional
@@ -49,6 +58,17 @@ public class MemberServiceImpl implements MemberService {
         }
 
         member.update(password, nickname);
+    }
+
+
+    public Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    @Override
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException, IOException {
+        new SecurityContextLogoutHandler().logout(request, response, getAuthentication());
+        response.sendRedirect("https://nid.naver.com/nidlogin.logout?returl=");
     }
 
     @Override
