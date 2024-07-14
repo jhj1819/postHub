@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.posthub.domain.member.dto.MemberInfo;
 import study.posthub.domain.member.dto.MemberRequest;
 import study.posthub.domain.member.entity.Member;
 import study.posthub.domain.member.repository.MemberRepository;
@@ -61,8 +62,20 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
-    public Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
+    @Override
+    public MemberInfo getAuthenticatedMemberInfo() {
+        Authentication authentication = getAuthentication();
+        String name = authentication != null ? authentication.getName() : "anonymousUser";
+        String authority = null;
+        if (authentication != null) {
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+            if (!authorities.isEmpty()) {
+                authority = authorities.iterator().next().getAuthority();
+            }
+        }
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
+
+        return new MemberInfo(name, authority, isAuthenticated);
     }
 
     @Override
@@ -74,5 +87,9 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member getOne(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow();
+    }
+
+    private Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 }

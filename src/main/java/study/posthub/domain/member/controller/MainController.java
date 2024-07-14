@@ -9,6 +9,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import study.posthub.domain.member.dto.MemberInfo;
 import study.posthub.domain.member.service.MemberService;
 import study.posthub.domain.member.service.impl.MainService;
 
@@ -25,9 +26,8 @@ public class MainController {
 
     @GetMapping("/")
     public String mainPage(Model model) {
-        Authentication getAuthenticationInfo = memberService.getAuthentication();
-        model.addAttribute("AuthenticationInfo", getAuthenticationInfo);
-
+        MemberInfo memberInfo = memberService.getAuthenticatedMemberInfo();
+        model.addAttribute("memberInfo", memberInfo);
         return "main";
     }
 
