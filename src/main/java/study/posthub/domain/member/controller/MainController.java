@@ -25,9 +25,11 @@ public class MainController {
     public String mainPage(Model model) {
         String name = mainService.getAuthenticatedMemberName();
         String authority = mainService.getAuthenticatedMemberAuthoritiy();
+        boolean isAuthenticated = mainService.getAuthenticatedMemberisAuthenticated();
 
         model.addAttribute("name", name);
         model.addAttribute("authority", authority);
+        model.addAttribute("isAuthenticated", isAuthenticated);
 
         return "main";
     }

@@ -13,18 +13,25 @@ import java.util.Collection;
 public class MainService {
 
     public String getAuthenticatedMemberName() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = getAuthentication();
+        return authentication != null ? authentication.getName() : "Anonymous";
     }
 
     public String getAuthenticatedMemberAuthoritiy() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("authenticationInfo = {}", authentication);
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Collection<? extends GrantedAuthority> authorities = getAuthentication().getAuthorities();
 
         if (!authorities.isEmpty()) {
             return authorities.iterator().next().getAuthority();
         }
 
         return null;
+    }
+
+    public boolean getAuthenticatedMemberisAuthenticated() {
+        return getAuthentication().isAuthenticated();
+    }
+
+    private Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 }

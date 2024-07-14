@@ -8,20 +8,21 @@ body {
     margin: 0;
 }
 
-.login-container {
+.login-container, .main-container {
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 20px;
     width: 300px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-.login-header {
+.login-header, .main-header {
     text-align: center;
     margin-bottom: 20px;
 }
 
-.login-body {
+.login-body, .user-info {
     margin-bottom: 20px;
 }
 
@@ -70,4 +71,22 @@ body {
 .login-footer {
     text-align: center;
     margin-top: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    margin-bottom: 10px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
 }
