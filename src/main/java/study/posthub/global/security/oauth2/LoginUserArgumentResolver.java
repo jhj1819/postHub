@@ -1,4 +1,4 @@
-package study.posthub.global.security;
+package study.posthub.global.security.oauth2;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -19,10 +19,10 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         // 파라미터에 @LoginUser 어노테이션이 붙어있으면 true
-        boolean isLoginUserAnnotation = parameter.getParameterAnnotation(LoginUser.class) != null;
+        boolean isLoginUserAnnotation = parameter.getParameterAnnotation(LoginMember.class) != null;
 
         // 파라미터 클래스 타입이 SessionUser.class면 true
-        boolean isUserClass = SessionUser.class.equals(parameter.getParameterType());
+        boolean isUserClass = SessionMember.class.equals(parameter.getParameterType());
 
         return isLoginUserAnnotation && isUserClass;
     }

@@ -1,4 +1,4 @@
-package study.posthub.domain.member.dto;
+package study.posthub.global.security.oauth2;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +13,10 @@ import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
-public class OAuth2Member implements OAuth2User {
+public class CustomOAuth2Member implements OAuth2User {
 
     private final OAuth2Response oAuth2Response;
-    private final Authority authority;
+//    private final Authority authority;
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -30,6 +30,6 @@ public class OAuth2Member implements OAuth2User {
 
     @Override
     public String getName() {
-        return null;
+        return oAuth2Response.getName();
     }
 }

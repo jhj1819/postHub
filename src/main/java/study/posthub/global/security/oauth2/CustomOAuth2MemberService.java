@@ -1,4 +1,4 @@
-package study.posthub.domain.member.service.impl;
+package study.posthub.global.security.oauth2;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +8,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import study.posthub.domain.member.dto.CustomOAuth2Member;
-import study.posthub.domain.member.dto.OAuth2Response;
-import study.posthub.domain.member.dto.impl.NaverResponse;
 import study.posthub.domain.member.entity.Member;
 import study.posthub.domain.member.repository.MemberRepository;
 
@@ -34,10 +31,10 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
                 .orElseThrow(() -> new OAuth2AuthenticationException(
                         "Unsupported provider: " + userRequest.getClientRegistration().getRegistrationId()));
 
-        Member member = saveOrUpdateMember(oAuth2Response);
+        SessionMember member = saveOrUpdateMember(oAuth2Response);
         session.setAttribute("member", member);
 
-        return new CustomOAuth2Member(oAuth2Response, member.getAuthority());
+        return new CustomOAuth2Member(oAuth2Response);
     }
 
     private Optional<OAuth2Response> getOAuth2Response(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
@@ -54,7 +51,7 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         return Optional.ofNullable(oAuth2Response);
     }
 
-    private Member saveOrUpdateMember(OAuth2Response oAuth2Response) {
+    private SessionMember saveOrUpdateMember(OAuth2Response oAuth2Response) {
         // 객체 2개 생기는지 테스트하기
         String email = oAuth2Response.getEmail();
         Member member = memberRepository.findByEmail(email)
@@ -63,6 +60,6 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         member.updateByRegister(oAuth2Response);
         memberRepository.save(member);
 
-        return member;
+        return new SessionMember(member);
     }
 }

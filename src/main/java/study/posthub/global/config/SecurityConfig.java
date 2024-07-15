@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import study.posthub.domain.member.service.impl.CustomOAuth2MemberService;
+import study.posthub.global.security.oauth2.CustomOAuth2MemberService;
 
 @Configuration
 @EnableWebSecurity

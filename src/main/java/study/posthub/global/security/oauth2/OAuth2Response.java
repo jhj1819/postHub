@@ -1,4 +1,4 @@
-package study.posthub.domain.member.dto;
+package study.posthub.global.security.oauth2;
 
 public interface OAuth2Response {
 
