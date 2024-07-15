@@ -1,8 +1,8 @@
 package study.posthub.global.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -11,15 +11,10 @@ import study.posthub.domain.member.service.impl.CustomOAuth2MemberService;
 
 @Configuration
 @EnableWebSecurity
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CustomOAuth2MemberService customOAuth2MemberService;
-
-    public  SecurityConfig(CustomOAuth2MemberService customOAuth2MemberService){
-
-        this.customOAuth2MemberService = customOAuth2MemberService;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

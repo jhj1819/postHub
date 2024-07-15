@@ -9,9 +9,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import study.posthub.domain.member.dto.CustomOAuth2Member;
-import study.posthub.domain.member.dto.NaverResponse;
 import study.posthub.domain.member.dto.OAuth2Response;
-import study.posthub.domain.member.entity.Authority;
+import study.posthub.domain.member.dto.impl.NaverResponse;
 import study.posthub.domain.member.entity.Member;
 import study.posthub.domain.member.repository.MemberRepository;
 
@@ -31,44 +30,38 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("memberInfo = {}", oAuth2User.getAttributes());
 
-        OAuth2Response oAuth2Response = getOAuth2Response(userRequest, oAuth2User);
-        if (oAuth2Response == null) {
-            throw new OAuth2AuthenticationException("Unsupported provider: " + userRequest.getClientRegistration().getRegistrationId());
-        }
+        OAuth2Response oAuth2Response = getOAuth2Response(userRequest, oAuth2User)
+                .orElseThrow(() -> new OAuth2AuthenticationException(
+                        "Unsupported provider: " + userRequest.getClientRegistration().getRegistrationId()));
 
         Member member = saveOrUpdateMember(oAuth2Response);
-        session.setAttribute("userId", member.getId());
+        session.setAttribute("member", member);
 
-        return new CustomOAuth2Member(oAuth2Response, member.getAuthority().name());
+        return new CustomOAuth2Member(oAuth2Response, member.getAuthority());
     }
 
-    private OAuth2Response getOAuth2Response(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
+    private Optional<OAuth2Response> getOAuth2Response(OAuth2UserRequest userRequest, OAuth2User oAuth2User) {
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        OAuth2Response oAuth2Response;
+
         if ("naver".equals(registrationId)) {
-            return new NaverResponse(oAuth2User.getAttributes());
+            oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
+        } else {
+            oAuth2Response = null;
         }
 
-        return null;
+        return Optional.ofNullable(oAuth2Response);
     }
 
     private Member saveOrUpdateMember(OAuth2Response oAuth2Response) {
-
+        // 객체 2개 생기는지 테스트하기
         String email = oAuth2Response.getEmail();
-        Optional<Member> existingMemberOptional = memberRepository.findByEmail(email);
-        Member member;
-        if (existingMemberOptional.isEmpty()) {
-            member = new Member();
-            member.setEmail(email);
-            member.setNickname(oAuth2Response.getName());
-            member.setAuthority(Authority.ADMIN);
-            memberRepository.save(member);
-        } else {
-            member = existingMemberOptional.get();
-            member.setEmail(email);
-            member.setNickname(oAuth2Response.getName());
-            memberRepository.save(member);
-        }
+        Member member = memberRepository.findByEmail(email)
+                .orElse(Member.getInstance(oAuth2Response));
+
+        member.updateByRegister(oAuth2Response);
+        memberRepository.save(member);
 
         return member;
     }

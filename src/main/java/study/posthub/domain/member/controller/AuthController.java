@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import study.posthub.domain.member.entity.Member;
 import study.posthub.domain.member.service.MemberService;
+import study.posthub.global.security.LoginUser;
 
 import java.io.IOException;
 
@@ -25,12 +26,14 @@ public class AuthController {
     private final MemberService memberService;
 
     @GetMapping("/")
-    public String mainPage(Model model, @SessionAttribute(name = "userId", required = false) Long userId) {
-        Member user = memberService.getLoginUser(userId);
-        if (user == null) {
-            user = createAnonymousMember();
+    public String mainPage(Model model, @LoginUser Member member, Long userId) {
+//        Member user = memberService.getLoginUser(userId);
+        log.info("member: {}", member);
+
+        if (member == null) {
+            member = createAnonymousMember();
         }
-        model.addAttribute("user", user);
+        model.addAttribute("user", member);
         return "main";
     }
 
