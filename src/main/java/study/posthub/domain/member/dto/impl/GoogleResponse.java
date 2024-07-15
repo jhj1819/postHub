@@ -1,37 +1,36 @@
-package study.posthub.domain.member.dto;
+package study.posthub.domain.member.dto.impl;
+
+import lombok.RequiredArgsConstructor;
+import study.posthub.domain.member.dto.OAuth2Response;
 
 import java.util.Map;
 
-public class NaverResponse implements OAuth2Response{
+@RequiredArgsConstructor
+public class GoogleResponse implements OAuth2Response {
 
     private final Map<String, Object> attribute;
 
-    public NaverResponse(Map<String, Object> attribute) {
-
-        this.attribute = (Map<String, Object>) attribute.get("response");
+    public GoogleResponse(Map<String, Object> attribute) {
+        this.attribute = attribute;
     }
 
     @Override
     public String getProvider() {
-
-        return "naver";
+        return "google";
     }
 
     @Override
     public String getProviderId() {
-
-        return attribute.get("id").toString();
+        return attribute.get("sub").toString();
     }
 
     @Override
     public String getEmail() {
-
         return attribute.get("email").toString();
     }
 
     @Override
     public String getName() {
-
         return attribute.get("name").toString();
     }
 }
