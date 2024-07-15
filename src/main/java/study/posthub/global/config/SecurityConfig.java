@@ -35,7 +35,7 @@ public class SecurityConfig {
                                 userInfoEndpointConfig.userService(customOAuth2MemberService)))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
                 .authorizeHttpRequests(req -> req

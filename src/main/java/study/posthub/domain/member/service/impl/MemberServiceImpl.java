@@ -4,19 +4,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.posthub.domain.member.dto.MemberInfo;
 import study.posthub.domain.member.dto.MemberRequest;
 import study.posthub.domain.member.entity.Member;
 import study.posthub.domain.member.repository.MemberRepository;
 import study.posthub.domain.member.service.MemberService;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -61,23 +59,6 @@ public class MemberServiceImpl implements MemberService {
         member.update(password, nickname);
     }
 
-
-    @Override
-    public MemberInfo getAuthenticatedMemberInfo() {
-        Authentication authentication = getAuthentication();
-        String name = authentication != null ? authentication.getName() : "anonymousUser";
-        String authority = null;
-        if (authentication != null) {
-            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-            if (!authorities.isEmpty()) {
-                authority = authorities.iterator().next().getAuthority();
-            }
-        }
-        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
-
-        return new MemberInfo(name, authority, isAuthenticated);
-    }
-
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException, IOException {
         new SecurityContextLogoutHandler().logout(request, response, getAuthentication());
@@ -87,6 +68,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member getOne(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow();
+    }
+
+    @Override
+    public Member getLoginUser(Long userId) {
+        if(userId == null) return null;
+
+        Optional<Member> optionalUser = memberRepository.findById(userId);
+        if(optionalUser.isEmpty()) return null;
+
+        return optionalUser.get();
     }
 
     private Authentication getAuthentication() {

@@ -1,5 +1,7 @@
 package study.posthub.domain.member.service.impl;
 
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -17,13 +19,11 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
-
-    private CustomOAuth2MemberService(MemberRepository memberRepository){
-        this.memberRepository = memberRepository;
-    }
+    private final HttpSession session;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -37,6 +37,8 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         }
 
         Member member = saveOrUpdateMember(oAuth2Response);
+        session.setAttribute("userId", member.getId());
+
         return new CustomOAuth2Member(oAuth2Response, member.getAuthority().name());
     }
 
@@ -46,10 +48,12 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         if ("naver".equals(registrationId)) {
             return new NaverResponse(oAuth2User.getAttributes());
         }
+
         return null;
     }
 
     private Member saveOrUpdateMember(OAuth2Response oAuth2Response) {
+
         String email = oAuth2Response.getEmail();
         Optional<Member> existingMemberOptional = memberRepository.findByEmail(email);
         Member member;
@@ -65,6 +69,7 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
             member.setNickname(oAuth2Response.getName());
             memberRepository.save(member);
         }
+
         return member;
     }
 }
