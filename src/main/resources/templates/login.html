@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="login-container">
+    <div class="login-header">
+        <h1>로그인</h1>
+    </div>
+    <div class="login-body">
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">로그인</button>
+        </form>
+        <div class="social-login">
+            <button class="btn btn-naver" onclick="location.href='/oauth2/authorization/naver'">네이버로 로그인</button>
+        </div>
+    </div>
+    <div class="login-footer">
+        <p>계정이 없으신가요? <a th:href="@{/register}">회원가입</a></p>
+    </div>
+</div>
+</body>
+</html>
