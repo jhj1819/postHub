@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import study.posthub.domain.member.dto.CustomOAuth2Member;
+import study.posthub.domain.member.dto.OAuth2Member;
 import study.posthub.domain.member.dto.OAuth2Response;
 import study.posthub.domain.member.dto.impl.GoogleResponse;
 import study.posthub.domain.member.dto.impl.NaverResponse;
