@@ -11,15 +11,15 @@
         <h1>test</h1>
     </header>
     <div class="user-info">
-        <p>이름: <span th:text="${user.getNickname()}"></span></p>
-        <p>권한: <span th:text="${user.getAuthority()}"></span></p>
+        <p>이름: <span th:text="${user.nickname()}"></span></p>
+        <p>권한: <span th:text="${user.authority()}"></span></p>
     </div>
     <nav>
         <ul>
-            <li th:if = "${user.getAuthority().name() == 'SIGNOUT'}">
+            <li th:if = "${user.authority().name() == 'SIGNOUT'}">
                 <a th:href="@{/login}">로그인</a>
             </li>
-            <li th:if = "${user.getAuthority().name() != 'SIGNOUT'}">
+            <li th:if = "${user.authority().name() != 'SIGNOUT'}">
                 <a th:href="@{/logout}">로그아웃</a>
             </li>
         </ul>

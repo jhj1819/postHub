@@ -1,4 +1,4 @@
-package study.posthub.global.security.oauth2;
+package study.posthub.global.common;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -9,10 +9,11 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import study.posthub.global.security.oauth2.dto.SessionMember;
 
 @Component
 @RequiredArgsConstructor
-public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final HttpSession httpSession;
 
@@ -33,7 +34,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         HttpSession session = request.getSession(false);
 
         if (session == null) {
-            return null;
+            return SessionMember.getAnonymousInstance();
         }
 
         return httpSession.getAttribute("member");

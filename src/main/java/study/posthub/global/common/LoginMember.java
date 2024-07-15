@@ -1,4 +1,4 @@
-package study.posthub.global.security.oauth2;
+package study.posthub.global.common;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

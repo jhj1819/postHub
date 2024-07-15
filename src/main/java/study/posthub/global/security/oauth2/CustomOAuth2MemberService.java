@@ -10,6 +10,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import study.posthub.domain.member.entity.Member;
 import study.posthub.domain.member.repository.MemberRepository;
+import study.posthub.global.security.oauth2.dto.NaverResponse;
+import study.posthub.global.security.oauth2.dto.OAuth2Response;
+import study.posthub.global.security.oauth2.dto.SessionMember;
 
 import java.util.Optional;
 
@@ -60,6 +63,6 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         member.updateByRegister(oAuth2Response);
         memberRepository.save(member);
 
-        return new SessionMember(member);
+        return SessionMember.getInstance(member);
     }
 }

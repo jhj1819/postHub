@@ -12,8 +12,5 @@ public interface MemberService {
     void register(MemberRequest memberRequest) throws Exception; /* 회원가입 */
     void withdraw(String email); /* 회원탈퇴 */
     void updateMemberInfo(String email, MemberRequest memberRequest) throws Exception; /* 회원정보 수정 */
-    void logout(HttpServletRequest request, HttpServletResponse response) throws IOException; /* 로그아웃 */
     Member getOne(Long memberId); /* 회원 단건 조회 */
-
-    Member getLoginUser(Long userId);
 }

@@ -60,27 +60,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException, IOException {
-        new SecurityContextLogoutHandler().logout(request, response, getAuthentication());
-        response.sendRedirect("https://nid.naver.com/nidlogin.logout?returl=");
-    }
-
-    @Override
     public Member getOne(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow();
-    }
-
-    @Override
-    public Member getLoginUser(Long userId) {
-        if(userId == null) return null;
-
-        Optional<Member> optionalUser = memberRepository.findById(userId);
-        if(optionalUser.isEmpty()) return null;
-
-        return optionalUser.get();
-    }
-
-    private Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
     }
 }
