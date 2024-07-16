@@ -1,11 +1,7 @@
 package study.posthub.domain.member.service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import study.posthub.domain.member.dto.MemberRequest;
 import study.posthub.domain.member.entity.Member;
-
-import java.io.IOException;
 
 public interface MemberService {
 

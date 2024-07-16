@@ -1,20 +1,12 @@
 package study.posthub.domain.member.service.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.posthub.domain.member.dto.MemberRequest;
 import study.posthub.domain.member.entity.Member;
 import study.posthub.domain.member.repository.MemberRepository;
 import study.posthub.domain.member.service.MemberService;
-
-import java.io.IOException;
-import java.util.Optional;
 
 @Service
 @Transactional
