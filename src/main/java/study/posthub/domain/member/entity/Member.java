@@ -2,7 +2,7 @@ package study.posthub.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import study.posthub.global.security.oauth2.OAuth2Response;
+import study.posthub.global.security.oauth2.dto.OAuth2Response;
 import study.posthub.global.common.BaseTimeEntity;
 
 @Entity

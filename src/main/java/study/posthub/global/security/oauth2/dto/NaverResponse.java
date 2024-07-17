@@ -1,4 +1,4 @@
-package study.posthub.global.security.oauth2;
+package study.posthub.global.security.oauth2.dto;
 
 import java.util.Map;
 
