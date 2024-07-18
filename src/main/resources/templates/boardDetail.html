@@ -28,10 +28,45 @@
 </nav>
 
 <div class="container w-75 p-5">
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title" th:text="${post.title}">Post Title</h1>
+      <p class="card-text">
+        <small class="text-muted d-inline me-2">작성자: <span th:text="${post.author}">Author</span></small>
+        <small class="text-muted d-inline me-2">조회수: <span th:text="${post.viewCount}">0</span></small>
+        <small class="text-muted d-inline">작성일: <span th:text="${post.createdAt}">2024-01-01</span></small>
+      </p>
+    </div>
+  </div>
 
+  <div class="card">
+    <div class="card-body">
+      <h2>본문</h2>
+      <p class="card-text" th:text="${post.content}">Post Content</p>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <h2>댓글</h2>
+    <ul class="list-group">
+    </ul>
+  </div>
+
+  <div class="mt-4">
+    <h3>댓글 작성</h3>
+    <form th:action="@{/post/{postId}/comments(postId=${post.id})}" method="post">
+      <div class="mb-3">
+        <textarea class="form-control" name="content" rows="3" placeholder="댓글을 입력하세요"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">댓글 작성</button>
+    </form>
+  </div>
+
+  <div class="mt-4">
+    <a href="/" class="btn btn-secondary">목록으로 돌아가기</a>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
