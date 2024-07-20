@@ -2,6 +2,7 @@ package study.posthub.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import study.posthub.global.security.oauth2.dto.OAuth2Response;
 import study.posthub.global.common.BaseTimeEntity;
 
 @Entity
@@ -10,6 +11,7 @@ import study.posthub.global.common.BaseTimeEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(of = {"email", "password", "nickname", "authority", "delYN"})
 public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +29,23 @@ public class Member extends BaseTimeEntity {
 
     private Long delYN;
 
+    public static Member getInstance(OAuth2Response oAuth2Response) {
+        return Member.builder()
+                .email(oAuth2Response.getEmail())
+                .nickname(oAuth2Response.getName())
+                .authority(Authority.USER)
+                .build();
+    }
+
     /* 회원 정보 수정 */
     public void update(String password, String nickname) {
         this.password = password;
         this.nickname = nickname;
+    }
+
+    public void updateByRegister(OAuth2Response oAuth2Response) {
+        this.email = oAuth2Response.getEmail();
+        this.nickname = oAuth2Response.getName();
     }
 
     public void delete() {
