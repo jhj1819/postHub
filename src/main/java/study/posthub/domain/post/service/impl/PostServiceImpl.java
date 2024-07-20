@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.posthub.domain.post.dto.AddPostRequest;
 import study.posthub.domain.post.entity.Post;
 import study.posthub.domain.post.repository.PostRepository;
 import study.posthub.domain.post.service.PostService;
@@ -23,8 +24,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post savePost(Post post) {
-        return null;
+    public Post savePost(AddPostRequest request) {
+        return postRepository.save(request.toEntity());
     }
 
     @Override
