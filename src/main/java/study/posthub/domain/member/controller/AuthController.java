@@ -21,13 +21,13 @@ public class AuthController {
 //        return "main";
 //    }
 //
-//    @GetMapping("/login")
-//    public String loginPage() {
-//        return "login";
-//    }
-
-    @GetMapping("/")
-    public String mainPage() {
-        return "index";
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
     }
+
+//    @GetMapping("/")
+//    public String mainPage() {
+//        return "index";
+//    }
 }

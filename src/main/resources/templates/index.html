@@ -19,8 +19,8 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end me-4" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link" aria-current="page" href="/login.html">로그인</a>
-                <a class="nav-link" href="/register.html">회원가입</a>
+                <a class="nav-link" aria-current="page" href="/login">로그인</a>
+                <a class="nav-link" href="/register">회원가입</a>
                 <a class="nav-link" href="#">로그아웃</a>
             </div>
         </div>
@@ -52,26 +52,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>Hello</td>
-            <td>Mark</td>
-            <td>4</td>
-            <td>20</td>
-            <td>2024-01-01</td>
-        </tr>
-        <tr>
-            <td>algorithm</td>
-            <td>David</td>
-            <td>16</td>
-            <td>101</td>
-            <td>2024-01-01</td>
-        </tr>
-        <tr>
-            <td>Controller</td>
-            <td>Json</td>
-            <td>4</td>
-            <td>10</td>
-            <td>2024-01-01</td>
+        <tr th:each="post : ${posts}">
+            <td>
+                <a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}">Title</a>
+            </td>
+            <td th:text="${post.author}">Author</td>
+            <td th:text="${post.viewCount}">0</td>
+            <td th:text="${post.createdAt}">2024-01-01</td>
         </tr>
         </tbody>
     </table>
@@ -96,7 +83,7 @@
                 </li>
             </ul>
         </nav>
-        <button class="btn btn-success ms-3">글 쓰기</button>
+        <a href="/new-post" class="btn btn-success ms-3">글 쓰기</a> <!-- 글쓰기 버튼 수정 -->
     </div>
 </div>
 
