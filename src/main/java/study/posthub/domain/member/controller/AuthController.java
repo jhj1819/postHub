@@ -20,7 +20,7 @@ public class AuthController {
 //        model.addAttribute("user", member);
 //        return "main";
 //    }
-//
+
     @GetMapping("/login")
     public String loginPage() {
         return "login";

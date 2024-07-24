@@ -57,27 +57,35 @@
                 <a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}">Title</a>
             </td>
             <td th:text="${post.author}">Author</td>
-            <td th:text="${post.viewCount}">0</td>
+            <td th:text="${post.commentCount()}">0</td>
+            <td th:text="${post.viewCount()}">0</td>
             <td th:text="${post.createdAt}">2024-01-01</td>
         </tr>
         </tbody>
     </table>
 
-    <div class="d-flex align-items-center">
-        <nav aria-label="Page navigation example" class="flex-grow-1">
+    <div class="d-flex align-items-center" th:if="${!posts.isEmpty()}">
+        <nav aria-label="Page navigation example" class="flex-grow-1" th:with="
+            pageNumber = ${posts.pageable.pageNumber},
+            pageSize = ${posts.pageable.pageSize},
+            totalPages = ${posts.totalPages},
+            startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+            tempEndPage = ${startPage + pageSize - 1},
+            endPage = ${tempEndPage > totalPages ? tempEndPage : totalPages}
+            ">
             <ul class="pagination justify-content-center mt-2 mb-0">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
+                <li class="page-item" th:classappend="${posts.first} ? 'disabled'">
+                    <a class="page-link" th:href="${posts.first} ? '#' : @{/(page=${pageNumber - 1})}">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}" th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/(page=${page - 1})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${posts.last} ? 'disabled'">
+                    <a class="page-link" th:href="${posts.last} ? '#' : @{/(page=${pageNumber + 1})}">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

@@ -2,6 +2,10 @@ package study.posthub.domain.post.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,15 +22,14 @@ import java.util.List;
 @Controller
 public class PostController {
 
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private MemberService memberService;
-
+    private final PostService postService;
+    private final MemberService memberService;
 
     @GetMapping("/")
-    public String getAllPosts(Model model) {
-        List<Post> posts  = postService.getAllPosts();
+    public String getAllPosts(Model model,
+                              @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<PostViewResponse> posts = postService.getAllPosts(pageable);
+
         model.addAttribute("posts", posts);
         return "index";
     }
@@ -35,7 +38,7 @@ public class PostController {
     public String newPost(@RequestParam(required = false) Long id, Model model) {
 
         if (id == null){
-            model.addAttribute("post", new PostViewResponse());
+            model.addAttribute("post", null);
         }else{
             Post post = postService.getPostById(id);
             model.addAttribute("post", new PostViewResponse(post));
