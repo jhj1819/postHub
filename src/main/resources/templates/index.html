@@ -60,7 +60,7 @@
             <td th:text="${post.author}">Author</td>
             <td th:text="${post.commentCount()}">0</td>
             <td th:text="${post.viewCount()}">0</td>
-            <td th:text="${post.createdAt}">2024-01-01</td>
+            <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd : HH:mm')}">2024-01-01</td>
         </tr>
         </tbody>
     </table>
