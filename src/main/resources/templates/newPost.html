@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <title>새 게시글 작성</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -17,10 +18,6 @@
       <label for="content" class="form-label">내용</label>
       <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
     </div>
-    <div class="mb-3">
-      <label for="author" class="form-label">작성자 ID</label>
-      <input type="number" class="form-control" id="author" name="userId" required>
-    </div>
     <button type="button" onclick="submitPost()" class="btn btn-primary">저장</button>
   </form>
 </div>
@@ -30,7 +27,6 @@
     const postData = {
       title: document.getElementById('title').value,
       content: document.getElementById('content').value,
-      userId: document.getElementById('author').value
     };
 
     fetch('/posts', {

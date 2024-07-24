@@ -41,17 +41,19 @@
 
       <!-- Register buttons -->
       <div class="text-center">
-        <p>Not a member? <a href="/register.html">Register</a></p>
-        <p>Sign in for</p>
-        <button type="button" class="btn btn-link btn-floating mx-1">
-          <img src="/btnG_icon_circle.png" style="width: 18px; height: 18px;">
-        </button>
+        <p>Not a member? <a th:href="@{/register.html}">Register</a></p>
+        <p>or sign up with:</p>
+        <a th:href="@{/oauth2/authorization/naver}" class="btn btn-link btn-floating mx-1">
+            <img src="/img/naver.png" style="width: 18px; height: 18px;" alt="naver login">
+        </a>
 
-        <button type="button" class="btn btn-link btn-floating mx-1">
-          <img src="/a8e484f2dfe39.png" style="width: 18px; height: 18px;"> </button>
+        <a th:href="@{/oauth2/authorization/kakao}" class="btn btn-link btn-floating mx-1">
+          <img src="/img/kakao.png" style="width: 18px; height: 18px;" alt="kakao login">
+        </a>
 
-        <button type="button" class="btn btn-link btn-floating mx-1">
-          <img src="/web_light_rd_na@4x.png" style="width: 18px; height: 18px;"> </button>
+        <a th:href="@{/oauth2/authorization/google}" class="btn btn-link btn-floating mx-1">
+          <img src="/img/google.png" style="width: 18px; height: 18px;" alt="google login">
+        </a>
       </div>
     </form>
   </div>

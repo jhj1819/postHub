@@ -1,5 +1,7 @@
 package study.posthub.domain.post.repository.impl;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -7,11 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import study.posthub.domain.post.dto.PostViewResponse;
 import study.posthub.domain.post.repository.PostRepositoryCustom;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static study.posthub.domain.post.entity.QPost.post;
 
@@ -33,6 +38,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.viewCount,
                         post.createdAt))
                 .from(post)
+                .orderBy(Objects.requireNonNull(getOrderSpecifier(pageable)).toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -40,5 +46,26 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         long totalCount = result.size();
 
         return new PageImpl<>(result, pageable, totalCount);
+    }
+
+    private List<OrderSpecifier<?>> getOrderSpecifier(Pageable pageable) {
+        List<OrderSpecifier<?>> orders = new ArrayList<>();
+
+        if (pageable.getSort().isEmpty()) return null;
+
+        for (Sort.Order order : pageable.getSort()) {
+            Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
+
+            switch (order.getProperty()) {
+                case "VIEW" -> {
+                    orders.add(new OrderSpecifier<>(direction, post.viewCount));
+                }
+                default -> {
+                    orders.add(new OrderSpecifier<>(direction, post.createdAt));
+                }
+            }
+        }
+
+        return orders;
     }
 }

@@ -6,9 +6,6 @@ import org.springframework.stereotype.Component;
 import study.posthub.domain.post.entity.Post;
 import study.posthub.domain.post.repository.PostRepository;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-
 @Component
 public class DetaInitializer implements CommandLineRunner {
 

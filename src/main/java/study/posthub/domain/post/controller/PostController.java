@@ -15,6 +15,8 @@ import study.posthub.domain.member.service.MemberService;
 import study.posthub.domain.post.dto.PostViewResponse;
 import study.posthub.domain.post.entity.Post;
 import study.posthub.domain.post.service.PostService;
+import study.posthub.global.common.LoginMember;
+import study.posthub.global.security.oauth2.dto.SessionMember;
 
 import java.util.List;
 
@@ -35,11 +37,13 @@ public class PostController {
     }
 
     @GetMapping("/new-post")
-    public String newPost(@RequestParam(required = false) Long id, Model model) {
+    public String newPost(@LoginMember SessionMember member,
+                          @RequestParam(required = false) Long id,
+                          Model model) {
 
-        if (id == null){
+        if (id == null) {
             model.addAttribute("post", null);
-        }else{
+        } else {
             Post post = postService.getPostById(id);
             model.addAttribute("post", new PostViewResponse(post));
         }

@@ -26,8 +26,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post savePost(PostRequest request) {
-        return postRepository.save(request.toEntity());
+    public Post savePost(String nickname, PostRequest request) {
+        Post post = request.toEntity(nickname);
+
+        return postRepository.save(post);
     }
 
     @Override

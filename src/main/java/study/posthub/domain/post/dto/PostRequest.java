@@ -7,7 +7,7 @@ public record PostRequest(
         String content,
         String author) {
 
-    public Post toEntity(){
+    public Post toEntity(String author){
         return Post.builder()
                 .title(title)
                 .content(content)
