@@ -4,15 +4,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import study.posthub.global.common.BaseTimeEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Post extends BaseTimeEntity {
 
     @Id
@@ -21,19 +23,14 @@ public class Post extends BaseTimeEntity {
 
     private String title;
     private String content;
-    private String author; // 작성자 (나중에 Member로 ?)
 
-    private int commentCount; // 댓글수
-    private int viewCount; // 조회수
-    private int likeCount; // 좋아요 수
+    private String author; // 작성자
 
-    @Builder
-    public Post(String title, String content, String author) {
-        this.title = title;
-        this.content = content;
-        this.author = author;
-        this.commentCount = 0;
-        this.viewCount = 0;
-        this.likeCount = 0;
+    private Long commentCount; // 댓글수
+    private Long viewCount; // 조회수
+    private Long likeCount; // 좋아요 수
+
+    public void increaseLikeCount() {
+        this.likeCount++;
     }
 }

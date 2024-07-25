@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import study.posthub.domain.post.dto.PostRequest;
 import study.posthub.domain.post.dto.PostViewResponse;
-import study.posthub.domain.post.entity.Post;
 import study.posthub.domain.post.service.PostService;
 import study.posthub.global.common.LoginMember;
 import study.posthub.global.security.oauth2.dto.SessionMember;
@@ -25,6 +24,8 @@ public class PostApiController {
     @PostMapping("/posts")
     public ResponseEntity<PostViewResponse> AddPost(@LoginMember SessionMember member, @RequestBody PostRequest request){
         PostViewResponse postViewResponse = postService.savePost(member.nickname(), request);
+        log.info("postViewResponse : {}", postViewResponse);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                     .body(postViewResponse);
     }

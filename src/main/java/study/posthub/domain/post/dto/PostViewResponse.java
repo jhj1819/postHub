@@ -9,9 +9,9 @@ public record PostViewResponse(
         String title,
         String content,
         String author,
-        int commentCount,
-        int viewCount,
-        LocalDateTime createdAt) {
+        Long commentCount,
+        Long viewCount,
+        String createdAt) {
 
     public PostViewResponse(Post post) {
         this(post.getId(), post.getTitle(), post.getContent(), post.getAuthor(), post.getCommentCount(), post.getViewCount(), post.getCreatedAt());

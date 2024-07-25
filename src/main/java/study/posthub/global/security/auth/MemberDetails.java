@@ -1,4 +1,4 @@
-package study.posthub.global.security.outh;
+package study.posthub.global.security.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

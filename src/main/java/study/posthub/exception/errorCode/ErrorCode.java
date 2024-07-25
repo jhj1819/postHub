@@ -19,7 +19,9 @@ public enum ErrorCode {
     TITLE_MAX_NUMBER(HttpStatus.BAD_REQUEST, "최대 글자 수를 초과했습니다."),
     NOT_FOUND_POST(HttpStatus.BAD_GATEWAY, "게시물을 찾을 수 없습니다."),
     ALREADY_DELETED(HttpStatus.BAD_GATEWAY, "이미 삭제된 게시물입니다."),
-    ;
+
+    /* 좋아요 */
+    ALREADY_LIKED(HttpStatus.BAD_REQUEST, "이미 좋아요를 눌렀습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
