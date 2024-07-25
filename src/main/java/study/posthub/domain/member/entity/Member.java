@@ -2,6 +2,7 @@ package study.posthub.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import study.posthub.global.security.oauth2.dto.OAuth2Response;
 import study.posthub.global.common.BaseTimeEntity;
 
@@ -35,6 +36,11 @@ public class Member extends BaseTimeEntity {
                 .nickname(oAuth2Response.getName())
                 .authority(Authority.USER)
                 .build();
+    }
+
+    /* 비밀번호 암호화 */
+    public void encodePassword(PasswordEncoder encoder) {
+        this.password = encoder.encode(password);
     }
 
     /* 회원 정보 수정 */
