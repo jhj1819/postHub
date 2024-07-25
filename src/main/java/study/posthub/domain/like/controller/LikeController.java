@@ -18,7 +18,7 @@ public class LikeController {
     private final LikeService likeService;
 
     // 좋아요 누르기
-    @PostMapping("/{postId}/like")
+    @PostMapping("/post/{postId}/like")
     public ResponseEntity<Long> like(@LoginMember SessionMember member, @PathVariable Long postId) {
         Long likedCount = likeService.like(postId, member.id());
 

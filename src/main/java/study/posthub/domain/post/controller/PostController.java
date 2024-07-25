@@ -23,7 +23,7 @@ public class PostController {
 
     @GetMapping("/")
     public String getAllPosts(Model model,
-                              @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                              @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<PostViewResponse> posts = postService.getAllPosts(pageable);
 
         model.addAttribute("posts", posts);

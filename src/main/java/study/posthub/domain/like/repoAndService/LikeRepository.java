@@ -5,5 +5,5 @@ import study.posthub.domain.like.entity.Like;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    boolean existsByPostIdAndAndMemberId(Long postId, Long memberId);
+    boolean existsLikeByPostIdAndMemberId(Long postId, Long memberId);
 }
