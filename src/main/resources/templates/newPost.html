@@ -38,7 +38,7 @@
     })
             .then(response => {
               if (response.ok) {
-                window.location.href = '/'; // 리다이렉트
+                window.location.href = '/post/' + response.id; // 리다이렉트
               } else {
                 return response.json().then(data => Promise.reject(data));
               }

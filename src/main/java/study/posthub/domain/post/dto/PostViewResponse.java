@@ -16,4 +16,8 @@ public record PostViewResponse(
     public PostViewResponse(Post post) {
         this(post.getId(), post.getTitle(), post.getContent(), post.getAuthor(), post.getCommentCount(), post.getViewCount(), post.getCreatedAt());
     }
+
+    public static PostViewResponse from(Post post) {
+        return new PostViewResponse(post);
+    }
 }

@@ -17,7 +17,7 @@ public enum ErrorCode {
     NOT_FOUND_TITLE(HttpStatus.NO_CONTENT, "제목을 입력하세요."),
     NOT_FOUND_CONTENT(HttpStatus.NO_CONTENT, "내용을 입력하세요."),
     TITLE_MAX_NUMBER(HttpStatus.BAD_REQUEST, "최대 글자 수를 초과했습니다."),
-    NOT_FOUND_BOARD(HttpStatus.BAD_GATEWAY, "게시물을 찾을 수 없습니다."),
+    NOT_FOUND_POST(HttpStatus.BAD_GATEWAY, "게시물을 찾을 수 없습니다."),
     ALREADY_DELETED(HttpStatus.BAD_GATEWAY, "이미 삭제된 게시물입니다."),
     ;
 

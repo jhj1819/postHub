@@ -1,7 +1,6 @@
 package study.posthub.domain.post.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,8 +10,8 @@ import study.posthub.domain.post.dto.PostViewResponse;
 import study.posthub.domain.post.entity.Post;
 import study.posthub.domain.post.repository.PostRepository;
 import study.posthub.domain.post.service.PostService;
-
-import java.util.List;
+import study.posthub.exception.custom.PostException;
+import study.posthub.exception.errorCode.ErrorCode;
 
 @Service
 @Transactional
@@ -26,10 +25,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post savePost(String nickname, PostRequest request) {
+    public PostViewResponse savePost(String nickname, PostRequest request) {
         Post post = request.toEntity(nickname);
+        postRepository.save(post);
 
-        return postRepository.save(post);
+        return PostViewResponse.from(post);
     }
 
     @Override
@@ -38,7 +38,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getPostById(Long id) {
-        return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
+    public PostViewResponse getPostById(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
+
+        return PostViewResponse.from(post);
+    }
+
+    @Override
+    public Page<PostViewResponse> getPostsByAuthor(String author, Pageable pageable) {
+        return null;
     }
 }
