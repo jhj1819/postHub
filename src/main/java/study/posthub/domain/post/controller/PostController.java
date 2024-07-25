@@ -44,8 +44,8 @@ public class PostController {
         if (id == null) {
             model.addAttribute("post", null);
         } else {
-            Post post = postService.getPostById(id);
-            model.addAttribute("post", new PostViewResponse(post));
+            PostViewResponse postViewResponse = postService.getPostById(id);
+            model.addAttribute("post", postViewResponse);
         }
 
         return "newPost";
@@ -54,8 +54,8 @@ public class PostController {
 
     @GetMapping("/post/{id}")
     public String getPostById(@PathVariable Long id, Model model) {  //@PathVariable : {id}를 변수로 인식시킴
-        Post post = postService.getPostById(id);
-        model.addAttribute("post", post);
+        PostViewResponse postViewResponse = postService.getPostById(id);
+        model.addAttribute("post", postViewResponse);
         return "boardDetail";
     }
 

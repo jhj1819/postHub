@@ -11,7 +11,8 @@ import java.util.List;
 public interface PostService {
 
     Page<PostViewResponse> getAllPosts(Pageable pageable); /* 전체 게시글 조회 */
-    Post savePost(String nickname, PostRequest addPostRequest); /* 게시글 작성 */
+    PostViewResponse savePost(String nickname, PostRequest addPostRequest); /* 게시글 작성 */
     void deletePost(Long id); /* 게시글 삭제 */
-    Post getPostById(Long id); /* 게시글 단건 조회 */
+    PostViewResponse getPostById(Long id); /* 게시글 단건 조회 */
+    Page<PostViewResponse> getPostsByAuthor(String author, Pageable pageable); /* 작성자별 게시글 조회 */
 }

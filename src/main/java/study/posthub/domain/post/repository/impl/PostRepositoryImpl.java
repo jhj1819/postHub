@@ -56,13 +56,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         for (Sort.Order order : pageable.getSort()) {
             Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
 
-            switch (order.getProperty()) {
-                case "VIEW" -> {
-                    orders.add(new OrderSpecifier<>(direction, post.viewCount));
-                }
-                default -> {
-                    orders.add(new OrderSpecifier<>(direction, post.createdAt));
-                }
+            if (order.getProperty().equals("VIEW")) {
+                orders.add(new OrderSpecifier<>(direction, post.viewCount));
+            } else {
+                orders.add(new OrderSpecifier<>(direction, post.createdAt));
             }
         }
 

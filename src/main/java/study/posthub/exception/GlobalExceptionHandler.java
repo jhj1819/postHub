@@ -5,6 +5,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import study.posthub.exception.custom.MemberException;
+import study.posthub.exception.custom.PostException;
 import study.posthub.exception.errorCode.ErrorCode;
 
 import java.util.Objects;
@@ -14,6 +15,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MemberException.class)
     public ResponseEntity<Object> handleCustomException(MemberException ex) {
+        ErrorCode errorCode = ex.getErrorCode();
+
+        return ResponseEntity.status(errorCode.getHttpStatus())
+                .body(errorCode.getMessage());
+    }
+
+    @ExceptionHandler(PostException.class)
+    public ResponseEntity<Object> handleCustomException(PostException ex) {
         ErrorCode errorCode = ex.getErrorCode();
 
         return ResponseEntity.status(errorCode.getHttpStatus())
