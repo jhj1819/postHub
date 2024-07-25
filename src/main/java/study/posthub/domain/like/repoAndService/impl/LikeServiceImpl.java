@@ -23,7 +23,7 @@ public class LikeServiceImpl implements LikeService {
     public Long like(Long postId, Long memberId) {
 
         // 좋아요를 누르기 전에 이미 좋아요를 눌렀는지 확인
-        if (likeRepository.existsByPostIdAndAndMemberId(postId, memberId)) {
+        if (likeRepository.existsLikeByPostIdAndMemberId(postId, memberId)) {
             throw new PostException(ErrorCode.ALREADY_LIKED);
         }
 
@@ -36,6 +36,7 @@ public class LikeServiceImpl implements LikeService {
         post.increaseLikeCount();
 
         likeRepository.save(like);
+        postRepository.save(post);
 
         return post.getLikeCount();
     }

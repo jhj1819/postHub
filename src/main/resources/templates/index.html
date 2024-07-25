@@ -49,18 +49,18 @@
             <th scope="col-4">작성자</th>
             <th scope="col-1">댓글</th>
             <th scope="col-1">조회수</th>
-            <th scope="col-2">생성일</th>
+            <th scope="col-1">좋아요</th>
+            <th scope="col-1">생성일</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="post : ${posts}">
-            <td>
-                <a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}">Title</a>
-            </td>
+        <tr th:each="post : ${posts}" th:onclick="|location.href='@{/post/{id}(id=${post.id})}'|">
+            <td th:text="${post.title}">Title</td>
             <td th:text="${post.author}">Author</td>
             <td th:text="${post.commentCount}">0</td>
             <td th:text="${post.viewCount}">0</td>
-            <td th:text="${#strings.substring(post.createdAt, 0, 10)}">2024-01-01</td>
+            <td th:text="${post.likeCount}">0</td>
+            <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024-01-01</td>
         </tr>
         </tbody>
     </table>
