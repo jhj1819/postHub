@@ -1,31 +1,35 @@
 package study.posthub.domain.post.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.posthub.domain.post.dto.AddPostRequest;
+import study.posthub.domain.post.dto.PostRequest;
+import study.posthub.domain.post.dto.PostViewResponse;
 import study.posthub.domain.post.entity.Post;
 import study.posthub.domain.post.repository.PostRepository;
 import study.posthub.domain.post.service.PostService;
-
-import java.util.List;
+import study.posthub.exception.custom.PostException;
+import study.posthub.exception.errorCode.ErrorCode;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
-    @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public Page<PostViewResponse> getAllPosts(Pageable pageable) {
+        return postRepository.loadDefaultPosts(pageable);
     }
 
     @Override
-    public Post savePost(AddPostRequest request) {
-        return postRepository.save(request.toEntity());
+    public PostViewResponse savePost(String nickname, PostRequest request) {
+        Post post = request.toEntity(nickname);
+        postRepository.save(post);
+
+        return PostViewResponse.from(post);
     }
 
     @Override
@@ -34,7 +38,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getPostById(Long id) {
-        return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
+    public PostViewResponse getPostById(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
+
+        return PostViewResponse.from(post);
+    }
+
+    @Override
+    public Page<PostViewResponse> getPostsByAuthor(String author, Pageable pageable) {
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <title>PostHub</title>
@@ -12,16 +13,16 @@
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand text-primary" href="#">PostHub</a>
+        <a class="navbar-brand text-primary" th:href="@{/}">PostHub</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end me-4" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link" aria-current="page" href="/login">로그인</a>
-                <a class="nav-link" href="/register">회원가입</a>
-                <a class="nav-link" href="#">로그아웃</a>
+                <a class="nav-link" aria-current="page" href="/login" sec:authorize="isAnonymous()">로그인</a>
+                <a class="nav-link" href="/register" sec:authorize="isAnonymous()">회원가입</a>
+                <a class="nav-link" href="/logout" sec:authorize="isAuthenticated()">로그아웃</a>
             </div>
         </div>
     </div>
@@ -57,33 +58,41 @@
                 <a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}">Title</a>
             </td>
             <td th:text="${post.author}">Author</td>
-            <td th:text="${post.viewCount}">0</td>
-            <td th:text="${post.createdAt}">2024-01-01</td>
+            <td th:text="${post.commentCount()}">0</td>
+            <td th:text="${post.viewCount()}">0</td>
+            <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd : HH:mm')}">2024-01-01</td>
         </tr>
         </tbody>
     </table>
 
-    <div class="d-flex align-items-center">
-        <nav aria-label="Page navigation example" class="flex-grow-1">
+    <div class="d-flex align-items-center" th:if="${!posts.isEmpty()}">
+        <nav aria-label="Page navigation example" class="flex-grow-1" th:with="
+            pageNumber = ${posts.pageable.pageNumber},
+            pageSize = ${posts.pageable.pageSize},
+            totalPages = ${posts.totalPages},
+            startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+            tempEndPage = ${startPage + pageSize - 1},
+            endPage = ${tempEndPage > totalPages ? tempEndPage : totalPages}
+            ">
             <ul class="pagination justify-content-center mt-2 mb-0">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
+                <li class="page-item" th:classappend="${posts.first} ? 'disabled'">
+                    <a class="page-link" th:href="${posts.first} ? '#' : @{/(page=${pageNumber - 1})}">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}" th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/(page=${page - 1})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${endPage == totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="${endPage == totalPages} ? '#' : @{/(page=${pageNumber + 1})}">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
             </ul>
         </nav>
-        <a href="/new-post" class="btn btn-success ms-3">글 쓰기</a> <!-- 글쓰기 버튼 수정 -->
+        <a href="/new-post" class="btn btn-success ms-3" sec:authorize="isAuthenticated()">글 쓰기</a> <!-- 글쓰기 버튼 수정 -->
     </div>
 </div>
 

@@ -34,7 +34,8 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         HttpSession session = request.getSession(false);
 
         if (session == null) {
-            return SessionMember.getAnonymousInstance();
+            session.setAttribute("member", SessionMember.getAnonymousInstance());
+//            return SessionMember.getAnonymousInstance();
         }
 
         return httpSession.getAttribute("member");

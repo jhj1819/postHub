@@ -1,26 +1,23 @@
 package study.posthub.domain.post.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import study.posthub.domain.post.entity.Post;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@Getter
-public class PostViewResponse {
+public record PostViewResponse(
+        Long id,
+        String title,
+        String content,
+        String author,
+        int commentCount,
+        int viewCount,
+        LocalDateTime createdAt) {
 
-    private Long id;
-    private String title;
-    private String content;
-    private String author;
-    private LocalDateTime createAt;
+    public PostViewResponse(Post post) {
+        this(post.getId(), post.getTitle(), post.getContent(), post.getAuthor(), post.getCommentCount(), post.getViewCount(), post.getCreatedAt());
+    }
 
-    public PostViewResponse(Post post){
-        this.id = post.getId();
-        this.title = post.getTitle();
-        this.content = post.getContent();
-        this.author = post.getAuthor();
-        this.createAt = post.getCreatedAt();
+    public static PostViewResponse from(Post post) {
+        return new PostViewResponse(post);
     }
 }

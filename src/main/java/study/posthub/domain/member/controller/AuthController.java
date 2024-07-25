@@ -5,29 +5,37 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import study.posthub.global.common.LoginMember;
-import study.posthub.global.security.oauth2.dto.SessionMember;
+import org.springframework.web.bind.annotation.PostMapping;
+import study.posthub.domain.member.dto.MemberRequest;
+import study.posthub.domain.member.service.MemberService;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
 
-//    @GetMapping("/")
-//    public String mainPage(@LoginMember SessionMember member, Model model) {
-//
-//        log.info("member: {}", member);
-//        model.addAttribute("user", member);
-//        return "main";
-//    }
-//
+    private final MemberService memberService;
+
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(Model model, MemberRequest memberRequest) {
+        model.addAttribute("memberRequest", memberRequest);
+
         return "login";
     }
 
-//    @GetMapping("/")
-//    public String mainPage() {
-//        return "index";
-//    }
+    @GetMapping("/register")
+    public String registerPage(Model model, MemberRequest memberRequest) {
+        model.addAttribute("memberRequest", memberRequest);
+
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(MemberRequest memberRequest) {
+        memberService.register(memberRequest);
+
+
+
+        return "redirect:/";
+    }
 }

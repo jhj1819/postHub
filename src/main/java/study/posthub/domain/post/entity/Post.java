@@ -12,21 +12,23 @@ import study.posthub.global.common.BaseTimeEntity;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Post extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String content;
     private String author; // 작성자 (나중에 Member로 ?)
+
     private int commentCount; // 댓글수
     private int viewCount; // 조회수
     private int likeCount; // 좋아요 수
 
     @Builder
-    public Post(String title, String content, String author){
+    public Post(String title, String content, String author) {
         this.title = title;
         this.content = content;
         this.author = author;
