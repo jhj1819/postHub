@@ -33,8 +33,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePost(Long id) {
+    public PostViewResponse updatePost(Long id, PostRequest request) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
 
+        post.update(request.title(), request.content());
+
+        return PostViewResponse.from(post);
+    }
+
+    @Override
+    public void deletePost(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
+
+        postRepository.delete(post);
     }
 
     @Override

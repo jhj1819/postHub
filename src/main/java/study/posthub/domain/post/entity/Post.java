@@ -31,6 +31,11 @@ public class Post extends BaseTimeEntity {
     private Long viewCount; // 조회수
     private Long likeCount; // 좋아요 수
 
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
     public void increaseLikeCount() {
         this.likeCount++;
     }
