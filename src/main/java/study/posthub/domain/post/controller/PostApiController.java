@@ -30,18 +30,18 @@ public class PostApiController {
 
     /* UPDATE */
     @PutMapping("/posts/{id}")
-    public ResponseEntity<PostViewResponse> UpdatePost(@PathVariable Long id, @RequestBody PostRequest request){
-        PostViewResponse postViewResponse = postService.updatePost(id, request);
+    public ResponseEntity<PostViewResponse> UpdatePost(@LoginMember SessionMember member, @PathVariable Long id, @RequestBody PostRequest request){
+        PostViewResponse postViewResponse = postService.updatePost(member.nickname(), id, request);
         log.info("postViewResponse : {}", postViewResponse);
 
         return ResponseEntity.status(HttpStatus.OK)
-                    .body(postViewResponse);
+                .body(postViewResponse);
     }
 
     /* DELETE */
     @DeleteMapping("/posts/{id}")
-    public ResponseEntity<Void> DeletePost(@PathVariable Long id){
-        postService.deletePost(id);
+    public ResponseEntity<Void> DeletePost(@LoginMember SessionMember member, @PathVariable Long id){
+        postService.deletePost(member.nickname(), id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
