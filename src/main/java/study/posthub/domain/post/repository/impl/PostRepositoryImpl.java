@@ -36,6 +36,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.author,
                         post.commentCount,
                         post.viewCount,
+                        post.likeCount,
                         post.createdAt))
                 .from(post)
                 .orderBy(Objects.requireNonNull(getOrderSpecifier(pageable)).toArray(OrderSpecifier[]::new))

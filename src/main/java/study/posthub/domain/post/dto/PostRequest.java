@@ -12,6 +12,9 @@ public record PostRequest(
                 .title(title)
                 .content(content)
                 .author(author)
+                .commentCount(0L)
+                .viewCount(0L)
+                .likeCount(0L)
                 .build();
     }
 }

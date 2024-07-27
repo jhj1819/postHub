@@ -34,8 +34,6 @@ public class AuthController {
     public String register(MemberRequest memberRequest) {
         memberService.register(memberRequest);
 
-
-
         return "redirect:/";
     }
 }

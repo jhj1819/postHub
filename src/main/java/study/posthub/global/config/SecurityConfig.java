@@ -3,9 +3,7 @@ package study.posthub.global.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,7 +13,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import study.posthub.global.security.oauth2.CustomOAuth2MemberService;
-import study.posthub.global.security.outh.MemberDetailsService;
+import study.posthub.global.security.auth.MemberDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -46,7 +44,7 @@ public class SecurityConfig {
                 .userDetailsService(memberDetailsService)
 
                 // oauth2Login 설정
-                .oauth2Login((outh2) -> outh2
+                .oauth2Login((auth2) -> auth2
                         .loginPage("/login") // OAuth2 로그인 시도 시 커스텀 로그인 페이지 경로 설정
                         .userInfoEndpoint((userInfoEndpointConfig) ->
                                 userInfoEndpointConfig.userService(customOAuth2MemberService)))

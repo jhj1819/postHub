@@ -3,12 +3,11 @@ package study.posthub.domain.member.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import study.posthub.global.security.oauth2.dto.OAuth2Response;
 import study.posthub.global.common.BaseTimeEntity;
+import study.posthub.global.security.oauth2.dto.OAuth2Response;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,11 +17,10 @@ public class Member extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    private Board board;
-
     private String email;
     private String password;
 
+    @Column(unique = true)
     private String nickname;
 
     @Enumerated(EnumType.STRING)

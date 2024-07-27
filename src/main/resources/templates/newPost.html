@@ -38,13 +38,13 @@
     })
             .then(response => {
               if (response.ok) {
-                window.location.href = '/post/' + response.id; // 리다이렉트
+                return response.json();
               } else {
                 return response.json().then(data => Promise.reject(data));
               }
             })
             .then(data => {
-              console.log('Success:', data);
+              window.location.href = '/post/' + data.id; // 리다이렉트
             })
             .catch((error) => {
               console.error('Error:', error);
