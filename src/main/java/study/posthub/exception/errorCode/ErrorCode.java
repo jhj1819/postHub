@@ -19,6 +19,14 @@ public enum ErrorCode {
     TITLE_MAX_NUMBER(HttpStatus.BAD_REQUEST, "최대 글자 수를 초과했습니다."),
     NOT_FOUND_POST(HttpStatus.BAD_GATEWAY, "게시물을 찾을 수 없습니다."),
     ALREADY_DELETED(HttpStatus.BAD_GATEWAY, "이미 삭제된 게시물입니다."),
+    UNAUTHORIZED_POST(HttpStatus.UNAUTHORIZED, "권한이 없는 게시물에 수정/삭제를 시도 했습니다."),
+
+    /* 댓글 & 답글 */
+    NOT_FOUND_COMMENT(HttpStatus.BAD_GATEWAY, "댓글을 찾을 수 없습니다."),
+    NOT_FOUND_REPLY(HttpStatus.BAD_GATEWAY, "답글을 찾을 수 없습니다."),
+    NOT_FOUND_PARENT(HttpStatus.BAD_GATEWAY, "부모 댓글을 찾을 수 없습니다."),
+    COMMENT_LENGTH_EXCEEDED(HttpStatus.BAD_REQUEST, "댓글의 최대 길이를 초과했습니다."),
+    REPLY_LENGTH_EXCEEDED(HttpStatus.BAD_REQUEST, "답글의 최대 길이를 초과했습니다."),
 
     /* 좋아요 */
     ALREADY_LIKED(HttpStatus.BAD_REQUEST, "이미 좋아요를 눌렀습니다.");
