@@ -33,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.save(comment);
 
-        return null;
+        return CommentViewResponse.from(comment);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.save(comment);
 
-        return null;
+        return CommentViewResponse.from(comment);
     }
 
     @Override
@@ -66,12 +66,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentViewResponse getCommentById(Long id) {
-        return null;
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_COMMENT));
+
+        return CommentViewResponse.from(comment);
     }
 
     @Override
     public Page<CommentViewResponse> getCommentsByPostId(Long postId, Pageable pageable) {
-        return null;
+        Page<Comment> page = commentRepository.findByPostId(postId, pageable);
+
+        return page.map(CommentViewResponse::from); // CommentViewResponse로 변환
     }
 
     @Override
