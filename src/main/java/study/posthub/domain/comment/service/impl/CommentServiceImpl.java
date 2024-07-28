@@ -54,11 +54,14 @@ public class CommentServiceImpl implements CommentService {
         return null;
     }
 
-
-
     @Override
-    public void deleteComment(Long id) {
+    public void deleteComment(String nickname, Long id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_COMMENT));
 
+        authorizeCommentAuthor(nickname, comment); // 댓글 작성자인지 확인
+
+        commentRepository.delete(comment);
     }
 
     @Override
@@ -74,5 +77,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Page<CommentViewResponse> getCommentsByParentId(Long ParentId, Pageable pageable) {
         return null;
+    }
+
+    private static void authorizeCommentAuthor(String nickname, Comment comment){
+        if(!comment.isAuthor(nickname)){
+            throw new PostException(ErrorCode.UNAUTHORIZED_COMMENT);
+        }
     }
 }
