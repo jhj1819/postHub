@@ -15,6 +15,7 @@ public record PostRequest(
                 .commentCount(0L)
                 .viewCount(0L)
                 .likeCount(0L)
+                .delYN(0L)
                 .build();
     }
 }

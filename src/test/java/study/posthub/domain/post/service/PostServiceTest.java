@@ -81,10 +81,9 @@ class PostServiceTest {
                 .build());
 
         PostViewResponse postViewResponse = postService.savePost("author", new PostRequest("title", "content", "tester")); // 다른 작성자가 쓴 게시글 생성
-
-        // when
         PostRequest postRequest = new PostRequest("title", "updated_content", "tester");
 
+        // when
         // then
         assertThatThrownBy(() -> postService.updatePost(notAuthor.nickname(), postViewResponse.id(), postRequest))
                 .isInstanceOf(PostException.class) // 예외의 타입 확인
@@ -92,7 +91,57 @@ class PostServiceTest {
     }
 
     @Test
-    void deletePost() {
+    void 게시글_삭제_성공() {
+        //given
+        SessionMember sessionMember = SessionMember.getInstance(Member.builder()
+                .email("notAuthor@example.com")
+                .nickname("tester")
+                .authority(Authority.USER)
+                .build());
+        PostViewResponse postViewResponse = postService.savePost(sessionMember.nickname(), new PostRequest("title", "content", "tester"));
+
+        //when
+        postService.deletePost(sessionMember.nickname(), postViewResponse.id());
+
+        //then
+        assertThat(postService.getOne(postViewResponse.id()).getDelYN()).isEqualTo(1L);
+    }
+
+    @Test
+    void 권한X_게시글_삭제() {
+        //given
+        SessionMember notAuthor = SessionMember.getInstance(Member.builder()
+                .email("notAuthor@example.com")
+                .nickname("notAuthor")
+                .authority(Authority.USER)
+                .build());
+        PostViewResponse postViewResponse = postService.savePost("author", new PostRequest("title", "content", "tester")); // 다른 작성자가 쓴 게시글 생성
+
+        // when
+        // then
+        assertThatThrownBy(() -> postService.deletePost(notAuthor.nickname(), postViewResponse.id()))
+                .isInstanceOf(PostException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.UNAUTHORIZED_POST);
+
+    }
+
+    @Test
+    void 삭제된_게시글_삭제() {
+        //given
+        SessionMember sessionMember = SessionMember.getInstance(Member.builder()
+                .email("notAuthor@example.com")
+                .nickname("tester")
+                .authority(Authority.USER)
+                .build());
+        PostViewResponse postViewResponse = postService.savePost(sessionMember.nickname(), new PostRequest("title", "content", "tester"));
+
+        postService.deletePost(sessionMember.nickname(), postViewResponse.id()); // 미리 게시글 삭제
+
+        // when
+        // then
+        assertThatThrownBy(() -> postService.deletePost(sessionMember.nickname(), postViewResponse.id()))
+                .isInstanceOf(PostException.class)
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ALREADY_DELETED);
     }
 
     @Test
