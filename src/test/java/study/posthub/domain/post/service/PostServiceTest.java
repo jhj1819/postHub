@@ -20,72 +20,50 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class PostServiceTest {
 
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
-    PostService postService;
+    @Autowired ObjectMapper objectMapper;
+    @Autowired PostService postService;
 
     @Test
-    void getAllPosts() {
-    }
-
-    @Test
-    void 게시글_생성_성공() throws Exception{
+    void 게시글_생성_성공() {
         //given
-        SessionMember sessionMember = SessionMember.getInstance(Member.builder()
-                .email("test@example.com")
-                .nickname("tester")
-                .authority(Authority.USER)
-                .build());
-
-        PostRequest postRequest = new PostRequest("title", "content", "tester");
+        SessionMember currentUser = createSessionMember();
+        PostRequest postRequest = new PostRequest("title", "content"); //PostRequest에 author 의미없네..
 
         //when
-        PostViewResponse postViewResponse = postService.savePost(sessionMember.nickname(), postRequest);
+        PostViewResponse postViewResponse = postService.savePost(currentUser.nickname(), postRequest);
 
         //then
         assertThat(postViewResponse.title()).isEqualTo("title");
         assertThat(postViewResponse.content()).isEqualTo("content");
-        assertThat(postViewResponse.author()).isEqualTo("tester");
-
+        assertThat(postViewResponse.author()).isEqualTo("currentUser");
     }
 
     @Test
-    void 게시글_수정_성공() throws Exception {
+    void 게시글_수정_성공() {
         //given
-        SessionMember sessionMember = SessionMember.getInstance(Member.builder()
-                .email("test@example.com")
-                .nickname("tester")
-                .authority(Authority.USER)
-                .build());
-       PostViewResponse postViewResponse = postService.savePost(sessionMember.nickname(), new PostRequest("title", "content", "tester")); // 게시글 생성
+        SessionMember currentUser = createSessionMember();
+        PostViewResponse postViewResponse = postService.savePost(currentUser.nickname(), new PostRequest("title", "content")); // 게시글 생성
 
         // when
-        PostRequest postRequest = new PostRequest("title", "updated_content", "tester");
-        PostViewResponse updatedPostViewResponse = postService.updatePost(sessionMember.nickname(), postViewResponse.id(), postRequest);
+        PostRequest postRequest = new PostRequest("title", "updated_content");
+        PostViewResponse updatedPostViewResponse = postService.updatePost(currentUser.nickname(), postViewResponse.id(), postRequest);
 
         // then
         assertThat(updatedPostViewResponse.title()).isEqualTo("title");
         assertThat(updatedPostViewResponse.content()).isEqualTo("updated_content");
-        assertThat(updatedPostViewResponse.author()).isEqualTo("tester");
+        assertThat(updatedPostViewResponse.author()).isEqualTo("currentUser");
     }
 
     @Test
     void 권한X_게시글_수정() {
         //given
-        SessionMember notAuthor = SessionMember.getInstance(Member.builder()
-                .email("notAuthor@example.com")
-                .nickname("notAuthor")
-                .authority(Authority.USER)
-                .build());
-
-        PostViewResponse postViewResponse = postService.savePost("author", new PostRequest("title", "content", "tester")); // 다른 작성자가 쓴 게시글 생성
-        PostRequest postRequest = new PostRequest("title", "updated_content", "tester");
+        SessionMember currentUser = createSessionMember();
+        PostViewResponse postViewResponse = postService.savePost("anotherUser", new PostRequest("title", "content")); // 다른 작성자가 쓴 게시글 생성
+        PostRequest postRequest = new PostRequest("title", "updated_content");
 
         // when
         // then
-        assertThatThrownBy(() -> postService.updatePost(notAuthor.nickname(), postViewResponse.id(), postRequest))
+        assertThatThrownBy(() -> postService.updatePost(currentUser.nickname(), postViewResponse.id(), postRequest))
                 .isInstanceOf(PostException.class) // 예외의 타입 확인
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.UNAUTHORIZED_POST); // 예외의 특정 필드 확인
     }
@@ -93,15 +71,11 @@ class PostServiceTest {
     @Test
     void 게시글_삭제_성공() {
         //given
-        SessionMember sessionMember = SessionMember.getInstance(Member.builder()
-                .email("notAuthor@example.com")
-                .nickname("tester")
-                .authority(Authority.USER)
-                .build());
-        PostViewResponse postViewResponse = postService.savePost(sessionMember.nickname(), new PostRequest("title", "content", "tester"));
+        SessionMember currentUser = createSessionMember();
+        PostViewResponse postViewResponse = postService.savePost(currentUser.nickname(), new PostRequest("title", "content")); // 게시글 생성
 
         //when
-        postService.deletePost(sessionMember.nickname(), postViewResponse.id());
+        postService.deletePost(currentUser.nickname(), postViewResponse.id());
 
         //then
         assertThat(postService.getOne(postViewResponse.id()).getDelYN()).isEqualTo(1L);
@@ -110,45 +84,35 @@ class PostServiceTest {
     @Test
     void 권한X_게시글_삭제() {
         //given
-        SessionMember notAuthor = SessionMember.getInstance(Member.builder()
-                .email("notAuthor@example.com")
-                .nickname("notAuthor")
-                .authority(Authority.USER)
-                .build());
-        PostViewResponse postViewResponse = postService.savePost("author", new PostRequest("title", "content", "tester")); // 다른 작성자가 쓴 게시글 생성
+        SessionMember currentUser = createSessionMember();
+        PostViewResponse postViewResponse = postService.savePost("anotherUser", new PostRequest("title", "content")); // 다른 작성자가 쓴 게시글 생성
 
         // when
         // then
-        assertThatThrownBy(() -> postService.deletePost(notAuthor.nickname(), postViewResponse.id()))
+        assertThatThrownBy(() -> postService.deletePost(currentUser.nickname(), postViewResponse.id()))
                 .isInstanceOf(PostException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.UNAUTHORIZED_POST);
-
     }
 
     @Test
     void 삭제된_게시글_삭제() {
         //given
-        SessionMember sessionMember = SessionMember.getInstance(Member.builder()
-                .email("notAuthor@example.com")
-                .nickname("tester")
-                .authority(Authority.USER)
-                .build());
-        PostViewResponse postViewResponse = postService.savePost(sessionMember.nickname(), new PostRequest("title", "content", "tester"));
-
-        postService.deletePost(sessionMember.nickname(), postViewResponse.id()); // 미리 게시글 삭제
+        SessionMember currentUser = createSessionMember();
+        PostViewResponse postViewResponse = postService.savePost(currentUser.nickname(), new PostRequest("title", "content")); // 게시글 생성
+        postService.deletePost(currentUser.nickname(), postViewResponse.id()); // 미리 게시글 삭제
 
         // when
         // then
-        assertThatThrownBy(() -> postService.deletePost(sessionMember.nickname(), postViewResponse.id()))
+        assertThatThrownBy(() -> postService.deletePost(currentUser.nickname(), postViewResponse.id()))
                 .isInstanceOf(PostException.class)
                 .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ALREADY_DELETED);
     }
 
-    @Test
-    void getPostById() {
-    }
-
-    @Test
-    void getPostsByAuthor() {
+    private SessionMember createSessionMember() {
+        return SessionMember.getInstance(Member.builder()
+                .email("test@example.com")
+                .nickname("currentUser")
+                .authority(Authority.USER)
+                .build());
     }
 }

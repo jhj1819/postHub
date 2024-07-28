@@ -4,8 +4,7 @@ import study.posthub.domain.post.entity.Post;
 
 public record PostRequest(
         String title,
-        String content,
-        String author) {
+        String content) {
 
     public Post toEntity(String author){
         return Post.builder()
