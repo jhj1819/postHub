@@ -68,6 +68,12 @@ public class PostServiceImpl implements PostService {
         return null;
     }
 
+    @Override
+    public Post getOne(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
+    }
+
     private static void authorizePostAuthor(String nickname, Post post){
         if(!post.isAuthor(nickname)){
             throw new PostException(ErrorCode.UNAUTHORIZED_POST);
