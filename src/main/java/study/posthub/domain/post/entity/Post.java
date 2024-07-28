@@ -30,6 +30,7 @@ public class Post extends BaseTimeEntity {
     private Long commentCount; // 댓글수
     private Long viewCount; // 조회수
     private Long likeCount; // 좋아요 수
+    private Long delYN; // 삭제 여부
 
     public void update(String title, String content) {
         this.title = title;
@@ -41,5 +42,13 @@ public class Post extends BaseTimeEntity {
 
     public void increaseLikeCount() {
         this.likeCount++;
+    }
+
+    public void delete() {
+        this.delYN = 1L;
+    }
+
+    public boolean isDeleted() {
+        return this.delYN == 1L;
     }
 }
