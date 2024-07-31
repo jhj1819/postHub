@@ -49,6 +49,30 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return new PageImpl<>(result, pageable, totalCount);
     }
 
+    @Override
+    public Page<PostViewResponse> loadPostsByTitle(String title, Pageable pageable) {
+        List<PostViewResponse> result = factory.select(Projections.constructor(PostViewResponse.class,
+                        post.id,
+                        post.title,
+                        post.content,
+                        post.author,
+                        post.commentCount,
+                        post.viewCount,
+                        post.likeCount,
+                        post.createdAt))
+                .from(post)
+                .where(post.title.contains(title),
+                        post.delYN.eq(0L))
+                .orderBy(Objects.requireNonNull(getOrderSpecifier(pageable)).toArray(OrderSpecifier[]::new))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long totalCount = result.size();
+
+        return new PageImpl<>(result, pageable, totalCount);
+    }
+
     private List<OrderSpecifier<?>> getOrderSpecifier(Pageable pageable) {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
 

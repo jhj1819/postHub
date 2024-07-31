@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,17 @@ public class PostController {
     public String getAllPosts(Model model,
                               @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<PostViewResponse> posts = postService.getAllPosts(pageable);
+
+        model.addAttribute("posts", posts);
+        return "index";
+    }
+
+    /* SEARCH */
+    @GetMapping("/search/{title}")
+    public String getPostsByTitle(Model model,
+                                  @PathVariable String title,
+                                  @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<PostViewResponse> posts = postService.getPostsByTitle(title, pageable);
 
         model.addAttribute("posts", posts);
         return "index";

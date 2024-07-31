@@ -64,8 +64,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostViewResponse> getPostsByAuthor(String author, Pageable pageable) {
-        return null;
+    public Page<PostViewResponse> getPostsByTitle(String title, Pageable pageable) {
+        return postRepository.loadPostsByTitle(title, pageable);
     }
 
     @Override

@@ -13,6 +13,6 @@ public interface PostService {
     PostViewResponse updatePost(String nickname, Long id, PostRequest addPostRequest); /* 게시글 수정 */
     void deletePost(String nickname, Long id); /* 게시글 삭제 */
     PostViewResponse getPostById(Long id); /* 게시글 단건 조회 */
-    Page<PostViewResponse> getPostsByAuthor(String author, Pageable pageable); /* 작성자별 게시글 조회 */
+    Page<PostViewResponse> getPostsByTitle(String title, Pageable pageable); /* 작성자별 게시글 조회 */
     Post getOne(Long id); /* 게시글 단건 조회(엔티티) */
 }
