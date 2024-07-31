@@ -33,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.save(comment);
 
-        return null;
+        return CommentViewResponse.from(comment);
     }
 
     @Override
@@ -51,28 +51,42 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.save(comment);
 
-        return null;
+        return CommentViewResponse.from(comment);
     }
 
-
-
     @Override
-    public void deleteComment(Long id) {
+    public void deleteComment(String nickname, Long id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_COMMENT));
 
+        authorizeCommentAuthor(nickname, comment); // 댓글 작성자인지 확인
+
+        commentRepository.delete(comment);
     }
 
     @Override
     public CommentViewResponse getCommentById(Long id) {
-        return null;
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_COMMENT));
+
+        return CommentViewResponse.from(comment);
     }
 
     @Override
     public Page<CommentViewResponse> getCommentsByPostId(Long postId, Pageable pageable) {
-        return null;
+        Page<Comment> page = commentRepository.findByPostId(postId, pageable);
+
+        return page.map(CommentViewResponse::from); // CommentViewResponse로 변환
     }
 
     @Override
     public Page<CommentViewResponse> getCommentsByParentId(Long ParentId, Pageable pageable) {
         return null;
+    }
+
+    private static void authorizeCommentAuthor(String nickname, Comment comment){
+        if(!comment.isAuthor(nickname)){
+            throw new PostException(ErrorCode.UNAUTHORIZED_COMMENT);
+        }
     }
 }

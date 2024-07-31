@@ -33,7 +33,7 @@ public class Comment extends BaseTimeEntity {
     private List<Comment> childComments = new ArrayList<>();
 
     private String author;
-    private String content;;
+    private String content;
 
     public void addPost(Post post) {
         this.post = post;
@@ -43,6 +43,10 @@ public class Comment extends BaseTimeEntity {
     public void addComment(Comment parentComment) {
         this.parentComment = parentComment;
         parentComment.getChildComments().add(this);
+    }
+
+    public boolean isAuthor(String author) {
+        return java.util.Objects.equals(this.author, author);
     }
 }
 

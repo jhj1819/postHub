@@ -27,6 +27,7 @@ public enum ErrorCode {
     NOT_FOUND_PARENT(HttpStatus.BAD_GATEWAY, "부모 댓글을 찾을 수 없습니다."),
     COMMENT_LENGTH_EXCEEDED(HttpStatus.BAD_REQUEST, "댓글의 최대 길이를 초과했습니다."),
     REPLY_LENGTH_EXCEEDED(HttpStatus.BAD_REQUEST, "답글의 최대 길이를 초과했습니다."),
+    UNAUTHORIZED_COMMENT(HttpStatus.UNAUTHORIZED, "권한이 없는 댓글/답글에 수정/삭제를 시도 했습니다."),
 
     /* 좋아요 */
     ALREADY_LIKED(HttpStatus.BAD_REQUEST, "이미 좋아요를 눌렀습니다.");

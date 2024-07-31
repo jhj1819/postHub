@@ -49,8 +49,10 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
 
         authorizePostAuthor(nickname, post); // 게시글 작성자인지 확인
-
-        postRepository.delete(post);
+        if (post.isDeleted()) {
+            throw new PostException(ErrorCode.ALREADY_DELETED);
+        }
+        post.delete();
     }
 
     @Override
@@ -64,6 +66,12 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<PostViewResponse> getPostsByAuthor(String author, Pageable pageable) {
         return null;
+    }
+
+    @Override
+    public Post getOne(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
     }
 
     private static void authorizePostAuthor(String nickname, Post post){

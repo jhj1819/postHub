@@ -18,8 +18,8 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         for (int i = 0; i < 100; ++i) {
-            PostRequest post = new PostRequest("title" + (i+1), "content" + (i+1), "author" + (i+1));
-            postService.savePost(post.author(), post);
+            PostRequest post = new PostRequest("title" + (i+1), "content" + (i+1));
+            postService.savePost("author" + (i+1), post);
         }
 
         MemberRequest member = new MemberRequest("ww@mail", "123456", "phone");
