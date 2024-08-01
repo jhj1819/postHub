@@ -40,6 +40,10 @@ public class Post extends BaseTimeEntity {
         return java.util.Objects.equals(this.author, author); // 작성자와 로그인한 사용자가 같은지 확인
     }
 
+    public void increaseCommentCount(){
+        this.commentCount++;
+    }
+
     public void increaseLikeCount() {
         this.likeCount++;
     }
