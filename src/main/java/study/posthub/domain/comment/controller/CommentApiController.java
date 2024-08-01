@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import study.posthub.domain.comment.dto.CommentRequest;
 import study.posthub.domain.comment.dto.CommentViewResponse;
 import study.posthub.domain.comment.service.CommentService;
@@ -35,6 +32,13 @@ public class CommentApiController {
         log.info("saveReply");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentViewResponse);
+    }
+
+    @DeleteMapping("/post/{postId}/{commentId}")
+    public ResponseEntity<Void> deleteComment(@LoginMember SessionMember member, @PathVariable Long postId, @PathVariable Long commentId) {
+        commentService.deleteComment(member.nickname(), commentId);
+        log.info("deleteComment");
+        return ResponseEntity.noContent().build();
     }
 
 }

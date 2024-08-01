@@ -10,6 +10,7 @@ public record CommentRequest(
         return Comment.builder()
                 .content(content)
                 .author(author)
+                .delYN(0L)
                 .build();
     }
 }

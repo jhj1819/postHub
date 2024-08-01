@@ -62,6 +62,8 @@ public class CommentServiceImpl implements CommentService {
 
         authorizeCommentAuthor(nickname, comment); // 댓글 작성자인지 확인
 
+        postRepository.findById(comment.getPost().getId()).get().decreaseCommentCount(); // 댓글 수 감소
+
         commentRepository.delete(comment);
     }
 
@@ -75,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Page<CommentViewResponse> getCommentsByPostId(Long postId, Pageable pageable) {
-        Page<Comment> page = commentRepository.findByPostId(postId, pageable);
+        Page<Comment> page = commentRepository.findByPostIdAndDelYN(postId, 0, pageable);
 
         return page.map(CommentViewResponse::from); // CommentViewResponse로 변환
     }
