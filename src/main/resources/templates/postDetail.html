@@ -39,7 +39,7 @@
 
         <div class="text-end" th:if="${member.nickname == post.author}">
           <button class="btn btn-outline-info text-end">수정</button>
-          <button class="btn btn-outline-danger text-end">삭제</button>
+          <button >삭제</button>
         </div>
       </div>
 
@@ -75,8 +75,13 @@
 
     <!-- comments -->
   <div id="comments">
-    <div th:each="comment : ${comments}">
-      <p><strong th:text="${comment.author}"></strong> <small class="text-muted ms-2" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd hh:mm:ss')}" ></small></p>
+    <div th:each="comment : ${comments}" th:id="'comment-' + ${comment.id}">
+      <p>
+        <strong th:text="${comment.author}"></strong>
+        <small class="text-muted ms-2" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd hh:mm:ss')}"></small>
+        <button class="btn btn-outline-info text-end">수정</button>
+        <button class="btn btn-outline-danger text-end" th:onclick=deleteComment([[${comment.id}]])>삭제</button>
+      </p>
       <p><span th:text="${comment.content}" style="white-space: pre-wrap;"></span></p>
     </div>
   </div>
@@ -147,6 +152,24 @@
             });
   }
 
+  function deleteComment(commentId) {
+    console.log(`deleteComment called with :  commentId: ${commentId}`); // 함수 호출 시 로그 출력
+
+    fetch(window.location.pathname + '/${commentId}', {
+      method: 'DELETE'
+    })
+            .then(response => {
+              if (response.ok) {
+                const commentElement = document.getElementById('comment-' + commentId);
+                commentElement.remove();
+              } else {
+                return response.json().then(data => Promise.reject(data));
+              }
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+  }
 </script>
 </body>
 </html>
