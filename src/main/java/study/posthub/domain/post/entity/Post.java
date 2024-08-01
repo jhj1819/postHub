@@ -32,6 +32,9 @@ public class Post extends BaseTimeEntity {
     private Long likeCount; // 좋아요 수
     private Long delYN; // 삭제 여부
 
+    @Enumerated(EnumType.STRING)
+    private Keyword keyword;
+
     public void update(String title, String content) {
         this.title = title;
         this.content = content;

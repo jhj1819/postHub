@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import study.posthub.domain.post.dto.PostRequest;
 import study.posthub.domain.post.dto.PostViewResponse;
+import study.posthub.domain.post.entity.Keyword;
 import study.posthub.domain.post.entity.Post;
 
 public interface PostService {
@@ -13,6 +14,6 @@ public interface PostService {
     PostViewResponse updatePost(String nickname, Long id, PostRequest addPostRequest); /* 게시글 수정 */
     void deletePost(String nickname, Long id); /* 게시글 삭제 */
     PostViewResponse getPostById(Long id); /* 게시글 단건 조회 */
-    Page<PostViewResponse> getPostsByTitle(String title, Pageable pageable); /* 작성자별 게시글 조회 */
+    Page<PostViewResponse> getPostsByKeyword(Keyword keyword, String query, Pageable pageable); /* 작성자별 게시글 조회 */
     Post getOne(Long id); /* 게시글 단건 조회(엔티티) */
 }
