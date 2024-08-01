@@ -32,7 +32,6 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = request.toEntity(nickname);
         comment.addPost(post);
 
-
         commentRepository.save(comment);
 
         return CommentViewResponse.from(comment);
