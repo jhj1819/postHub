@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import study.posthub.domain.comment.dto.CommentViewResponse;
+import study.posthub.domain.comment.service.CommentService;
 import study.posthub.domain.post.dto.PostViewResponse;
 import study.posthub.domain.post.service.PostService;
 import study.posthub.global.common.LoginMember;
@@ -20,6 +22,7 @@ import study.posthub.global.security.oauth2.dto.SessionMember;
 public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping("/")
     public String getAllPosts(Model model,
@@ -48,7 +51,9 @@ public class PostController {
     @GetMapping("/post/{id}")
     public String getPostById(@PathVariable Long id, Model model) {  //@PathVariable : {id}를 변수로 인식시킴
         PostViewResponse postViewResponse = postService.getPostById(id);
+        Page<CommentViewResponse> comments = commentService.getCommentsByPostId(id, Pageable.unpaged());
         model.addAttribute("post", postViewResponse);
+        model.addAttribute("comments", comments);
         return "boardDetail";
     }
 }
