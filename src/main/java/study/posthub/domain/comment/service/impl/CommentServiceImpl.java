@@ -28,8 +28,10 @@ public class CommentServiceImpl implements CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(ErrorCode.NOT_FOUND_POST));
 
+        post.increaseCommentCount();
         Comment comment = request.toEntity(nickname);
         comment.addPost(post);
+
 
         commentRepository.save(comment);
 
