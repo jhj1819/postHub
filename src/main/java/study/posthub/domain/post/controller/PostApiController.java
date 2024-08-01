@@ -19,7 +19,7 @@ public class PostApiController {
     private final PostService postService;
 
     /* CREATE */
-    @PostMapping("/posts")
+    @PostMapping("/post")
     public ResponseEntity<PostViewResponse> AddPost(@LoginMember SessionMember member, @RequestBody PostRequest request){
         PostViewResponse postViewResponse = postService.savePost(member.nickname(), request);
         log.info("postViewResponse : {}", postViewResponse);
@@ -29,7 +29,7 @@ public class PostApiController {
     }
 
     /* UPDATE */
-    @PutMapping("/posts/{id}")
+    @PutMapping("/post/{id}")
     public ResponseEntity<PostViewResponse> UpdatePost(@LoginMember SessionMember member, @PathVariable Long id, @RequestBody PostRequest request){
         PostViewResponse postViewResponse = postService.updatePost(member.nickname(), id, request);
         log.info("postViewResponse : {}", postViewResponse);
@@ -39,7 +39,7 @@ public class PostApiController {
     }
 
     /* DELETE */
-    @DeleteMapping("/posts/{id}")
+    @DeleteMapping("/post/{id}")
     public ResponseEntity<Void> DeletePost(@LoginMember SessionMember member, @PathVariable Long id){
         postService.deletePost(member.nickname(), id);
 

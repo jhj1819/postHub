@@ -38,8 +38,8 @@
         <h1 class="card-title flex-grow-1" th:text="${post.title}">Post Title</h1>
 
         <div class="text-end" th:if="${member.nickname == post.author}">
-          <button class="btn btn-outline-info text-end">수정</button>
-          <button class="btn btn-outline-danger text-end">삭제</button>
+          <button class="btn btn-outline-info text-end" onclick=updatePost()>수정</button>
+          <button class="btn btn-outline-danger text-end" onclick=deletePost()>삭제</button>
         </div>
       </div>
 
@@ -96,6 +96,24 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+  function updatePost() {
+    const postId = window.location.pathname.split('/').pop();
+    location.href = '/new-post?id=' + postId;
+  }
+
+  function deletePost() {
+    fetch(window.location.pathname, {
+      method: 'DELETE',
+    })
+            .then(response => {
+              if (response.ok) {
+                location.href = '/'
+              } else {
+                return response.json().then(data => Promise.reject(data));
+              }
+            });
+  }
+
   function like() {
     fetch(window.location.pathname + '/like', {
       method: 'POST',
@@ -110,7 +128,7 @@
               } else {
                 return response.json().then(data => Promise.reject(data));
               }
-            })
+            });
   }
 
   function submitComment() {
@@ -146,7 +164,6 @@
               console.error('Error:', error);
             });
   }
-
 </script>
 </body>
 </html>

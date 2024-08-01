@@ -57,15 +57,14 @@ public class PostController {
     }
 
     @GetMapping("/new-post")
-    public String newPost(@LoginMember SessionMember member,
-                          @RequestParam(required = false) Long id,
+    public String newPost(@RequestParam(required = false) Long id,
                           Model model) {
 
         if (id == null) {
-            model.addAttribute("post", null);
+            model.addAttribute("posts", null);
         } else {
             PostViewResponse postViewResponse = postService.getPostById(id);
-            model.addAttribute("post", postViewResponse);
+            model.addAttribute("posts", postViewResponse);
         }
 
         return "newPost";
