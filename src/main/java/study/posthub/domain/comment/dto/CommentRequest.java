@@ -4,9 +4,7 @@ import study.posthub.domain.comment.entity.Comment;
 
 public record CommentRequest(
         String content,
-        String author,
-        Long postId,
-        Long parentId) {
+        String author) {
 
     public Comment toEntity(String author){
         return Comment.builder()

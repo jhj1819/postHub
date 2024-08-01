@@ -69,13 +69,22 @@
     </button>
   </div>
 
+    <!-- comments -->
+  <div id="comments">
+    <div th:each="comment : ${comments}">
+      <p><strong th:text="${comment.author}"></strong></p>
+      <p><strong>${data.author}</strong> <small class="text-muted ms-2">${data.createdAt}</small></p>
+      <p></p><span th:text="${comment.content}"></span></p>
+    </div>
+  </div>
+
   <div class="mt-4">
     <form th:action="@{/post/{postId}/comments(postId=${post.id})}" method="post">
       <div class="mb-3">
         <textarea class="form-control" name="content" rows="3" placeholder="댓글을 입력하세요"></textarea>
       </div>
       <div class="text-end">
-        <button type="button" class="btn btn-primary">댓글 작성</button>
+        <button type="button" onclick="submitComment()" class="btn btn-primary">댓글 작성</button>
       </div>
     </form>
   </div>
@@ -99,6 +108,41 @@
               }
             })
   }
+
+  function submitComment() {
+    const commentData = {
+      content: document.querySelector('textarea[name="content"]').value,
+    };
+
+    fetch(window.location.pathname + '/comments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(commentData)
+    })
+            .then(response => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                return response.json().then(data => Promise.reject(data));
+              }
+            })
+            .then(data => {
+              const comments = document.getElementById('comments');
+              const comment = document.createElement('div');
+              comment.innerHTML = `
+                <p><strong>${data.author}</strong> <small class="text-muted ms-2">${data.createdAt}</small></p>
+                <p><span>${data.content}</span></p>
+              `;
+              comments.appendChild(comment);
+              document.querySelector('textarea[name="content"]').value = '';
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+  }
+
 </script>
 </body>
 </html>
