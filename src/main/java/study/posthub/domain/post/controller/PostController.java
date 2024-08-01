@@ -1,5 +1,6 @@
 package study.posthub.domain.post.controller;
 
+import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +18,12 @@ import study.posthub.domain.post.service.PostService;
 import study.posthub.global.common.LoginMember;
 import study.posthub.global.security.oauth2.dto.SessionMember;
 
+import java.util.Objects;
+
+@lombok.extern.slf4j.Slf4j
 @RequiredArgsConstructor
 @Controller
+@Slf4j
 public class PostController {
 
     private final PostService postService;
@@ -60,11 +65,12 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String getPostById(@PathVariable Long id, Model model) {  //@PathVariable : {id}를 변수로 인식시킴
+    public String getPostById(@LoginMember SessionMember member, @PathVariable Long id, Model model) {  //@PathVariable : {id}를 변수로 인식시킴
         PostViewResponse postViewResponse = postService.getPostById(id);
         Page<CommentViewResponse> comments = commentService.getCommentsByPostId(id, Pageable.unpaged());
         model.addAttribute("post", postViewResponse);
         model.addAttribute("comments", comments);
+        model.addAttribute("member", Objects.requireNonNullElseGet(member, SessionMember::getAnonymousInstance));
         return "postDetail";
     }
 }

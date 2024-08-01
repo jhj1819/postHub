@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
   <title>PostHub</title>
@@ -33,11 +34,19 @@
   <!-- title -->
   <div class="card border-0">
     <div class="card-body">
-      <h1 class="card-title" th:text="${post.title}">Post Title</h1>
+      <div class="container-fluid d-flex justify-content-between align-items-center m-2">
+        <h1 class="card-title flex-grow-1" th:text="${post.title}">Post Title</h1>
+
+        <div class="text-end" th:if="${member.nickname == post.author}">
+          <button class="btn btn-outline-info text-end">수정</button>
+          <button class="btn btn-outline-danger text-end">삭제</button>
+        </div>
+      </div>
+
       <p class="card-text text-end">
         <small class="text-muted d-inline me-2">작성자: <span th:text="${post.author}">Author</span></small>
         <small class="text-muted d-inline me-2">조회수: <span th:text="${post.viewCount}">0</span></small>
-        <small class="text-muted d-inline">작성일: <span th:text="${post.createdAt}">2024-01-01</span></small>
+        <small class="text-muted d-inline">작성일: <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd / mm:ss')}">2024-01-01</span></small>
       </p>
     </div>
   </div>
@@ -54,13 +63,8 @@
   </div>
 
   <!-- likes -->
-  <div class="container text-center">
+  <div class="container text-center" sec:authorize="isAuthenticated()">
     <button type="button" onclick=like() class="btn btn-outline-primary">
-      <!-- blank heart -->
-      <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-      </svg> -->
-
       <!-- full heart -->
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
@@ -72,8 +76,9 @@
     <!-- comments -->
   <div id="comments">
     <div th:each="comment : ${comments}">
-      <p><strong th:text="${comment.author}"></strong> <small class="text-muted ms-2" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd hh:mm:ss')}" ></small></p>
-      <p><span th:text="${comment.content}" style="white-space: pre-wrap;"></span></p>
+      <p><strong th:text="${comment.author}"></strong></p>
+      <p><strong>${data.author}</strong> <small class="text-muted ms-2">${data.createdAt}</small></p>
+      <p></p><span th:text="${comment.content}"></span>
     </div>
   </div>
 
@@ -83,7 +88,8 @@
         <textarea class="form-control" name="content" rows="3" placeholder="댓글을 입력하세요"></textarea>
       </div>
       <div class="text-end">
-        <button type="button" onclick="submitComment()" class="btn btn-primary">댓글 작성</button>
+        <button type="button" onclick="submitComment()" class="btn btn-primary"
+                th:classappend="${#authorization.expression('isAnonymous()')} ? 'disabled'">댓글 작성</button>
       </div>
     </form>
   </div>
