@@ -80,7 +80,7 @@
         <strong th:text="${comment.author}"></strong>
         <small class="text-muted ms-2" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd hh:mm:ss')}"></small>
         <button class="btn btn-outline-info text-end">수정</button>
-        <button class="btn btn-outline-danger text-end" th:onclick=deleteComment([[${comment.id}]])>삭제</button>
+        <button class="btn btn-outline-danger text-end" th:onclick="deleteComment([[${comment.id}]])">삭제</button>
       </p>
       <p><span th:text="${comment.content}" style="white-space: pre-wrap;"></span></p>
     </div>
@@ -171,9 +171,9 @@
   }
 
   function deleteComment(commentId) {
-    console.log(`deleteComment called with :  commentId: ${commentId}`); // 함수 호출 시 로그 출력
+    console.log('comment id = ', commentId);
 
-    fetch(window.location.pathname + '/${commentId}', {
+    fetch(window.location.pathname + '/' + commentId, {
       method: 'DELETE'
     })
             .then(response => {
