@@ -72,9 +72,8 @@
     <!-- comments -->
   <div id="comments">
     <div th:each="comment : ${comments}">
-      <p><strong th:text="${comment.author}"></strong></p>
-      <p><strong>${data.author}</strong> <small class="text-muted ms-2">${data.createdAt}</small></p>
-      <p></p><span th:text="${comment.content}"></span></p>
+      <p><strong th:text="${comment.author}"></strong> <small class="text-muted ms-2" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd hh:mm:ss')}" ></small></p>
+      <p><span th:text="${comment.content}" style="white-space: pre-wrap;"></span></p>
     </div>
   </div>
 
@@ -133,7 +132,7 @@
               const comment = document.createElement('div');
               comment.innerHTML = `
                 <p><strong>${data.author}</strong> <small class="text-muted ms-2">${data.createdAt}</small></p>
-                <p><span>${data.content}</span></p>
+                <p><span style="white-space: pre-wrap;">${data.content}</span></p>
               `;
               comments.appendChild(comment);
               document.querySelector('textarea[name="content"]').value = '';
