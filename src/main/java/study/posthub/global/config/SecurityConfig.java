@@ -58,7 +58,7 @@ public class SecurityConfig {
 
                 // 인증 Url 설정
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/", "/search/**",
+                        .requestMatchers("/", "/search/**", "/post/**",
                                 "/login", "/register", "/oauth2/**").permitAll()
                         .anyRequest().authenticated())
 
