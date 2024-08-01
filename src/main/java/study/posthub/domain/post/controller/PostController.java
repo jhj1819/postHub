@@ -1,7 +1,7 @@
 package study.posthub.domain.post.controller;
 
-import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import study.posthub.domain.comment.dto.CommentViewResponse;
 import study.posthub.domain.comment.service.CommentService;
 import study.posthub.domain.post.dto.PostViewResponse;
+import study.posthub.domain.post.entity.Keyword;
 import study.posthub.domain.post.service.PostService;
 import study.posthub.global.common.LoginMember;
 import study.posthub.global.security.oauth2.dto.SessionMember;
 
 import java.util.Objects;
 
-@lombok.extern.slf4j.Slf4j
 @RequiredArgsConstructor
 @Controller
 @Slf4j
@@ -39,11 +39,18 @@ public class PostController {
     }
 
     /* SEARCH */
-    @GetMapping("/search/{title}")
+    @GetMapping("/search")
     public String getPostsByTitle(Model model,
-                                  @PathVariable String title,
+                                  @RequestParam(defaultValue = "TITLE") Keyword keyword,
+                                  @RequestParam String query,
                                   @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<PostViewResponse> posts = postService.getPostsByTitle(title, pageable);
+        Page<PostViewResponse> posts = postService.getPostsByKeyword(keyword, query, pageable);
+
+        log.info("pageNumber = {}", pageable.getPageNumber());
+        log.info("pageSize = {}", pageable.getPageSize());
+        log.info("offset = {}", pageable.getOffset());
+        log.info("totalElements = {}", posts.getTotalElements());
+        log.info("totalPages = {}", posts.getTotalPages());
 
         model.addAttribute("posts", posts);
         return "index";

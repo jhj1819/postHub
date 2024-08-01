@@ -3,6 +3,7 @@ package study.posthub.domain.post.repository.impl;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import study.posthub.domain.post.dto.PostViewResponse;
+import study.posthub.domain.post.entity.Keyword;
 import study.posthub.domain.post.repository.PostRepositoryCustom;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.likeCount,
                         post.createdAt))
                 .from(post)
+                .where(post.delYN.eq(0L))
                 .orderBy(Objects.requireNonNull(getOrderSpecifier(pageable)).toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -50,7 +53,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     @Override
-    public Page<PostViewResponse> loadPostsByTitle(String title, Pageable pageable) {
+    public Page<PostViewResponse> loadPostsByKeyword(Keyword keyword, String query, Pageable pageable) {
         List<PostViewResponse> result = factory.select(Projections.constructor(PostViewResponse.class,
                         post.id,
                         post.title,
@@ -61,8 +64,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.likeCount,
                         post.createdAt))
                 .from(post)
-                .where(post.title.contains(title),
-                        post.delYN.eq(0L))
+                .where(post.delYN.eq(0L),
+                        getKeywordQuery(keyword, query))
                 .orderBy(Objects.requireNonNull(getOrderSpecifier(pageable)).toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -89,5 +92,18 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         }
 
         return orders;
+    }
+
+    private BooleanExpression getKeywordQuery(Keyword keyword, String query) {
+        return switch (keyword) {
+            case TITLE -> post.title.contains(query);
+            case CONTENT -> post.content.contains(query);
+            case TITLE_CONTENT -> (post.title.contains(query)).or(post.content.contains(query));
+            case AUTHOR -> post.author.contains(query);
+//            case VIEW -> post.viewCount.eq(Long.parseLong(query));
+//            case LIKE -> post.likeCount.eq(Long.parseLong(query));
+//            case COMMENT -> post.commentCount.eq(Long.parseLong(query));
+            default -> null;
+        };
     }
 }

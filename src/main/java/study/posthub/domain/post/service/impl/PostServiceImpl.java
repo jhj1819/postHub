@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.posthub.domain.post.dto.PostRequest;
 import study.posthub.domain.post.dto.PostViewResponse;
+import study.posthub.domain.post.entity.Keyword;
 import study.posthub.domain.post.entity.Post;
 import study.posthub.domain.post.repository.PostRepository;
 import study.posthub.domain.post.service.PostService;
@@ -64,8 +65,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostViewResponse> getPostsByTitle(String title, Pageable pageable) {
-        return postRepository.loadPostsByTitle(title, pageable);
+    public Page<PostViewResponse> getPostsByKeyword(Keyword keyword, String query, Pageable pageable) {
+        return postRepository.loadPostsByKeyword(keyword, query, pageable);
     }
 
     @Override
