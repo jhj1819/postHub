@@ -78,8 +78,7 @@
     <div th:each="comment : ${comments}" th:id="'comment-' + ${comment.id}">
       <p>
         <strong th:text="${comment.author}"></strong>
-        <small class="text-muted ms-2" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd hh:mm:ss')}"></small>
-        <button class="btn btn-outline-info text-end">수정</button>
+        <small class="text-muted ms-2" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></small>
         <button class="btn btn-outline-danger text-end" th:onclick="deleteComment([[${comment.id}]])">삭제</button>
       </p>
       <p><span th:text="${comment.content}" style="white-space: pre-wrap;"></span></p>
@@ -158,8 +157,13 @@
             .then(data => {
               const comments = document.getElementById('comments');
               const comment = document.createElement('div');
+              comment.id = 'comment-' + data.id;
               comment.innerHTML = `
-                <p><strong>${data.author}</strong> <small class="text-muted ms-2">${data.createdAt}</small></p>
+                <p>
+                  <strong>${data.author}</strong>
+                  <small class="text-muted ms-2">${data.createdAt}</small>
+                  <button class="btn btn-outline-danger text-end" onclick="deleteComment(${data.id})">삭제</button>
+                </p>
                 <p><span style="white-space: pre-wrap;">${data.content}</span></p>
               `;
               comments.appendChild(comment);
