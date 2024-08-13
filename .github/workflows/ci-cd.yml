@@ -34,13 +34,13 @@ jobs:
         run: ./gradlew clean build -x test
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/page:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/posthub:latest .
 
       - name: Docker Login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/postHub:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/posthub:latest
 
   deploy:
     runs-on: self-hosted
@@ -55,7 +55,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/postHub:latest
-            docker stop postHub || true
-            docker rm postHub || true
-            docker run -d --name postHub -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/postHub:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/posthub:latest
+            docker stop posthub || true
+            docker rm posthub || true
+            docker run -d --name postHub -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/posthub:latest
