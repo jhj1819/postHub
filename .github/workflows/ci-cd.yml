@@ -43,7 +43,7 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/postHub:latest
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
 
     steps:
